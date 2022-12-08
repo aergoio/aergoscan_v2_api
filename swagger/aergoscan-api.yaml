@@ -1,0 +1,22 @@
+# deprecate : aergoscan_v2_api/swagger/aergoscan-api.yaml
+# new ----> : aergoscan_v2_api/api-docs/
+# aergoscan 2.0 API
+openapi: "3.0.0"
+info:
+  title: aergoscan 2.0 API
+  description: "These are passed directly to elasticsearch. For the documentation about `q`, see [this article](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html)"
+  version: "1.0.0"
+servers:
+  - url: https://api.aergoscan.io/testnet/v2
+  - url: https://api.aergoscan.io/mainnet/v2
+tags:
+#  - name: baseApi
+#    description: baseApi...
+  - name: homeApi
+    description: Home
+  - name: blocksTransactionsApi
+    description: Blocks / Transactions
+  - name: othersApi
+    description: others (existedTxTokenList, serarch)
+  - name: tokenNftApi
+    description: Token / NFT

@@ -1,0 +1,44 @@
+{
+  "development": {
+    "username": "username",
+    "password": "password",
+    "database": "database",
+    "host": "host",
+    "dialect": "mysql",
+    "pool": {
+      "max": 10,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "logging": false
+  },
+  "test": {
+    "username": "root",
+    "password": "1234",
+    "database": "aergoscan",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "pool": {
+      "max": 10,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "logging": false
+  },
+  "production": {
+    "username": "admin",
+    "password": "aergoscan123!",
+    "database": "aergoscan",
+    "host": "aergoscan-master-instance-1.cnmfr9wvmqrr.ap-northeast-2.rds.amazonaws.com",
+    "dialect": "mysql",
+    "pool": {
+      "max": 10,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    },
+    "logging": false
+  }
+}

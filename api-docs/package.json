@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for aergoscan, mostly API for chain metadata in elasticsearch db",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node bin/server.js"
+  },
+  "author": "",
+  "dependencies": {
+    "@babel/register": "^7.17.7",
+    "axios": "^0.26.1",
+    "bs58check": "^2.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.16.3",
+    "package.json": "^2.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.0",
+    "@babel/core": "^7.1.0",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "swagger-cli": "^4.0.4",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0",
+    "yamljs": "^0.3.0"
+  }
+}

@@ -209,7 +209,8 @@ paths:
           description: 'Token List / Detail
             <br>1. token 전체 리스트 검색 시 : type:ARC1
             <br><br>2. token 상세 : _id:{contract address}
-            <br><br>3. (name:{search-token-name-or-symbol}* OR symbol:*{search-token-name-or-symbol}*) AND type:ARC1'
+            <br><br>3. (name:{search-token-name-or-symbol}* OR symbol:*{search-token-name-or-symbol}*) AND type:ARC1
+            <br><br>4. (name_lower:{search-token-name-or-symbol}* OR symbol_lower:*{search-token-name-or-symbol}*) AND type:ARC1'
           in: query
           required: true
           schema:
@@ -1371,6 +1372,11 @@ components:
           type: string
         token_transfers:
           type: integer
+        status:
+          type: string
+          enum:
+            - SUCCESS
+            - ERROR
 
     ContractTx_meta:
       type: object
@@ -1469,6 +1475,10 @@ components:
         blockno:
           type: integer
         ts:
+          type: string
+        token_uri:
+          type: string
+        image_url:
           type: string
 
     tx_hash:

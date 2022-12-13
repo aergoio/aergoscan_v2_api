@@ -369,6 +369,7 @@ const tokenNftBalance = async (req, res, next) => {
             //-- token get information (images/url)
                 for (let tokenList of result.hits) {
                     if(tokenList.token != null) {
+                    // if(tokenList.token.length > 0) {
                         if (tokenRegisteredCache.has(tokenList.meta.address)) {
                             const tempToken = JSON.parse(tokenRegisteredCache.get(tokenList.meta.address));
                             tokenList.token.meta.name = tempToken.token_name;

@@ -109,7 +109,7 @@ const names = async (req, res, next) => {
 }
 
 /**
- * ------------ 삭제 예정
+ * ------------ not used
  */
 const totalTokens = async (req, res, next) => {
     if (req.params.chainId !== 'mainnet') res.send(`not available for chain ${req.params.chainId}`);

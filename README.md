@@ -3,73 +3,74 @@
 This is a REST API server implemented in Node.js using Express.
 
 The server connects to an Elasticsearch cluster that contains Aergo blockchain metadata.
-Indices are populated by [aergo-esindexer](https://github.com/aergoio/aergo-esindexer).
+Indices are populated by [aergo-indexer-2.0](https://github.com/aergoio/aergo-indexer-2.0).
 
 It offers the following REST endpoints:
 
 ```
-/:chainId/mainBlockInfo
-/:chainId/recentTransactions
-/:chainId/txHistory
-/:chainId/blocks
-/:chainId/transactions
-/:chainId/contractTx
-/:chainId/existedTxTokenList
-/:chainId/search
-/:chainId/token
-/:chainId/tokenTransfers
-/:chainId/tokenHolder
-/:chainId/nft
-/:chainId/nftTransfers
-/:chainId/nftHolder
-/:chainId/nftInventory
-/:chainId/nftGroupCountInventory
-```
+/:chainId/v2/chainInfo
+/:chainId/v2/maxTokens
+/:chainId/v2/bestBlock
 
-Custom search endpoints
+/:chainId/v2/blocks
+/:chainId/v2/transactions
+/:chainId/v2/contractTx
 
-```
-/:chainId/transferStats
+/:chainId/v2/txHistory
+/:chainId/v2/mainBlockInfo
+/:chainId/v2/RecentTransactions
+
+/:chainId/v2/accounts
+/:chainId/v2/names
+/:chainId/v2/totalTokens
+/:chainId/v2/search
+/:chainId/v2/rewards
+/:chainId/v2/tokensPrice
+/:chainId/v2/existedTxTokenList
+
+/:chainId/v2/token
+/:chainId/v2/nft
+/:chainId/v2/tokenTransfers
+/:chainId/v2/nftTransfers
+/:chainId/v2/tokenHolder
+/:chainId/v2/nftHolder
+/:chainId/v2/tokenBalance
+/:chainId/v2/nftInventory
+/:chainId/v2/nftGroupCountInventory
 ```
 
 Search endpoints support the query params `q`, `sort`, `from` and `size`.
 These are passed directly to elasticsearch.
 For the documentation about `q`, see [this article](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html).
 
-## DB Configuration
-    DB schema:
-        CREATE TABLE `token_list` (
-            `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'idx',
-            `network` varchar(10) DEFAULT NULL COMMENT 'main(mainnet), testnet(testnet), chain(alpah)',
-            `type` varchar(4) DEFAULT NULL COMMENT 'ARC1, ARC2',
-            `token_address` varchar(60) DEFAULT NULL COMMENT 'token address',
-            `token_name` varchar(20) DEFAULT NULL COMMENT 'name',
-            `token_symbol` varchar(20) DEFAULT NULL COMMENT 'symbol',
-            `token_url` varchar(45) DEFAULT NULL COMMENT 'homepage',
-            `token_image` varchar(200) DEFAULT NULL COMMENT 'image url',
-            `status` varchar(10) DEFAULT NULL COMMENT 'request:1, view:2, confirm:3, reject:4',
-            `is_view` char(1) DEFAULT NULL COMMENT 'view - Y/N',
-            `author` varchar(45) DEFAULT NULL COMMENT 'admin',
-            `email` varchar(45) DEFAULT NULL COMMENT 'email',
-            `comment` text COMMENT 'comment',
-            `regdate` datetime DEFAULT NULL COMMENT 'regitration date',
-        PRIMARY KEY (`id`),
-        KEY `uix-token_list_type` (`type`) USING BTREE
-        ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+## Authorized Token/NFT
+See [DBCONFIG.MD](https://github.com/aergoio/aergoscan_v2_api/blob/develop/DBCONFIG.md)
 
-    Create File : /.env
-        SCAN_DB_HOST=host
-        SCAN_DB_DATABASE=database
-        SCAN_DB_USERNAME=user
-        SCAN_DB_PASSWORD=password
-
-## Docker Compose Build & Deploy
+## Docker-Compose Build & Deploy
 Available SELECTED_NETWORK: 'mainnet', 'testnet', 'alpha' and 'local'
 
-    • testnet deploy (docker-compose-mainnet.yml, docker-compose-testnet.yml, docker-compose-alpha.yml, docker-compose-local).yml
-	    ○ up
-		#docker-compose -f docker-compose.yml -f docker-compose-testnet.yml up --build -d
-        ○ down
-		#docker-compose -f docker-compose.yml -f docker-compose-testnet.yml down
+        • local deploy
+            ○ up
+                #sudo docker-compose -f docker-compose.yml -f docker-compose-local.yml up --build -d
+            ○ down
+                #sudo docker-compose -f docker-compose.yml -f docker-compose-local.yml down
+	
+        • mainnet deploy
+            ○ up
+                #sudo docker-compose -f docker-compose.yml -f docker-compose-mainnet.yml up --build -d
+            ○ down
+                #sudo docker-compose -f docker-compose.yml -f docker-compose-mainnet.yml down
+		
+	    • testnet deploy
+            ○ up
+                #sudo docker-compose -f docker-compose.yml -f docker-compose-testnet.yml up --build -d
+            ○ down
+                #sudo docker-compose -f docker-compose.yml -f docker-compose-testnet.yml down
 
-    • curl localhost:3000/testnet/v2
+	    • alpha deploy
+            ○ up
+                #sudo docker-compose-f docker-compose.yml  -f docker-compose-alpha.yml up --build -d
+            ○ down
+                #sudo docker-compose -f docker-compose.yml -f docker-compose-alpha.yml down
+
+        • curl localhost:3000/testnet/v2

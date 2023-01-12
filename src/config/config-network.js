@@ -1,8 +1,6 @@
 const SELECTED_NETWORK = process.env.SELECTED_NETWORK
-// const ES_URL = process.env.ES_URL;
-// const ENV_HTTP_PORT = process.env.HTTP_PORT;
-const ES_URL = "3.39.162.67:9200";
-const ENV_HTTP_PORT = "3000";
+const ES_URL = process.env.ES_URL;
+const ENV_HTTP_PORT = process.env.HTTP_PORT;
 
 console.log(">>> SELECTED_NETWORK = "+SELECTED_NETWORK);
 console.log(">>> ES_URL           = "+ES_URL);

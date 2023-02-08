@@ -2,6 +2,22 @@ import {addCachedTokenData, nftRegisteredCache, schedulerDataCache, tokenRegiste
 import cfg from "../../config/config";
 import axios from "axios";
 
+/**
+ * Query distinct accountsBalance with most recent transaction
+ */
+const accountsBalance = async (req, res, next) => {
+    console.log('accountsBalance : '+req.url);
+
+    try {
+        let result = await req.apiClient.accountsBalance(req.query.q, req.query.sort, parseInt(req.query.from || 0), Math.min(1000, parseInt(req.query.size || 10)));
+
+        return res.json(result);
+    } catch(e) {
+
+        return res.json({error: e});
+    }
+}
+
 
 /**
  * Query distinct accounts with most recent transaction
@@ -283,4 +299,4 @@ const transferStats = async (req, res, next) => {
 
 
 
-export { accounts, names, totalTokens, search, rewards, tokensPrice, existedTxTokenList, transferStats }
+export { accountsBalance, accounts, names, totalTokens, search, rewards, tokensPrice, existedTxTokenList, transferStats }

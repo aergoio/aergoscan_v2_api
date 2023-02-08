@@ -2,6 +2,7 @@ import express from 'express';
 
 import {
     accounts,
+    accountsBalance,
     names,
     totalTokens,
     search,
@@ -14,6 +15,7 @@ import {
 const apiV2 = express.Router({mergeParams: true});
 
 apiV2.route('/accounts').get(accounts);
+apiV2.route('/accountsBalance').get(accountsBalance);
 apiV2.route('/names').get(names);
 apiV2.route('/totalTokens').get(totalTokens); // not used
 apiV2.route('/search').get(search)

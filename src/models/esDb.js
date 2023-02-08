@@ -46,6 +46,7 @@ export class ApiClient {
         this.ACCOUNT_TOKENS_INDEX = `${chainId}_account_tokens`;
         this.NFT_INDEX = `${chainId}_nft`;
         this.CONTRACT_TX = `${chainId}_contract`;
+        this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
     }
 
     async searchBlock(opts, single = false) {
@@ -168,6 +169,36 @@ export class ApiClient {
         const resp = {
             // total: response.hits.total.value,
             // total:  await this.getTokenTxCount(q),
+            total: totalCnt,
+            limitPageCount: limitPageCount,
+            from,
+            size,
+            hits: response.hits.hits.map(item => ({hash: item._id, meta: item._source}))
+        };
+        return resp;
+    }
+
+    async accountsBalance (q, sort="balance_float", from=0, size=20) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.ACCOUNT_BALANCE_INDEX,
+            q,
+            sort,
+            from,
+            size
+        };
+        const response = await esDb.search(query);
+        console.log("ACCOUNT_BALANCE_INDEX = "+this.ACCOUNT_BALANCE_INDEX)
+        console.log("query = "+JSON.stringify(query));
+        console.log(response);
+
+        // total-count and limit page count
+        const totalCnt = await this.getAccountBalanceCount(q);
+        let limitPageCount = totalCnt;
+        if (totalCnt > 10000) limitPageCount = 1000 * size;
+        const resp = {
+            // total: response.hits.total.value,
+            // total: await this.getTxCount(q),
             total: totalCnt,
             limitPageCount: limitPageCount,
             from,
@@ -370,6 +401,17 @@ export class ApiClient {
     async getTokenNftHolderCount (q) {
         const args = {
             index: this.ACCOUNT_TOKENS_INDEX
+        };
+        if (q) {
+            args.q = q;
+        }
+        const { count } = await esDb.count(args);
+        return count;
+    }
+
+    async getAccountBalanceCount (q) {
+        const args = {
+            index: this.ACCOUNT_BALANCE_INDEX
         };
         if (q) {
             args.q = q;

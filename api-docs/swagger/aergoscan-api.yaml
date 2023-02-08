@@ -751,6 +751,45 @@ paths:
           description: Unexpected error
           content: {}
 
+  /accountsBalance:
+    get:
+      tags:
+        - othersApi
+      summary: accountsBalance
+      description: accountsBalance
+      parameters:
+        - name: sort
+          description: sort (balance_float:desc)
+          in: query
+          required: true
+          schema:
+            type: string
+            default: balance_float:desc
+        - name: from
+          description: from (0)
+          in: query
+          required: true
+          schema:
+            type: string
+            default: 0
+        - name: size
+          description: to (20)
+          in: query
+          required: true
+          schema:
+            type : string
+            default: 20
+      responses:
+        200:
+          description: An array of accountsBalance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountsBalanceRes"
+        default:
+          description: Unexpected error
+          content: {}
+
   /accounts:
     get:
       tags:
@@ -1080,6 +1119,28 @@ components:
           items:
             $ref: "#/components/schemas/Names"
 
+    AccountsBalanceRes:
+      type: object
+      properties:
+        total:
+          name: block height
+          type: integer
+        limitPageCount:
+          name: limit Page Count
+          type: integer
+        from:
+          name: from
+          type: integer
+        size:
+          name: size
+          type: integer
+        hits:
+          name: hits
+          description: meta info
+          type: array
+          items:
+            $ref: "#/components/schemas/AccountsBalance"
+
     AccountsRes:
       type: object
       properties:
@@ -1268,6 +1329,14 @@ components:
           type: integer
         tx:
           type: string
+
+    AccountsBalance:
+      type: object
+      properties:
+        hash:
+          type: string
+        tx:
+          $ref: "#/components/schemas/account_balance"
 
     Accounts:
       type: object
@@ -1480,6 +1549,21 @@ components:
           type: string
         image_url:
           type: string
+
+    account_balance:
+      type: object
+      description: tx_hash data
+      properties:
+        blockno:
+          type: integer
+        balance:
+          type: string
+        balance_float:
+          type: integer
+        staking:
+          type: string
+        staking_float:
+          type: integer
 
     tx_hash:
       type: object

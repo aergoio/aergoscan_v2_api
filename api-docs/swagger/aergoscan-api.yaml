@@ -1556,6 +1556,8 @@ components:
       properties:
         blockno:
           type: integer
+        ts:
+          type: string
         balance:
           type: string
         balance_float:

@@ -1,14 +1,14 @@
 version: '3.1'
 services:
   backend:
-    image: aergoscan/api:1.0.3
+    image: aergoscan/api:2.0.0
     build:
       args:
         ARG_SELECTED_NETWORK: alpha
         ARG_ES_URL: localhost:9200
         ARG_HTTP_PORT: 3001
     command:
-      - sudo docker run -d --rm -p 3001:3001 --net=host --privileged --name aergoscan-api aergoscan/api:1.0.0
+      - sudo docker run -d --rm -p 3001:3001 --net=host --privileged --name aergoscan-api aergoscan/api:2.0.0
 
 
 

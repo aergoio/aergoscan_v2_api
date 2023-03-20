@@ -12,7 +12,7 @@ module.exports = {
 
     HTTP_PORT: ENV_HTTP_PORT,
     DB_HOST: process.env.ES_HOST || ES_URL,
-    AVAILABLE_NETWORKS: ['mainnet', 'main'], // v1 호환성 유지 - main
+    AVAILABLE_NETWORKS: ['testnet', 'test'], // v1 호환성 유지 - main
     HOST: 'https://api.aergoscan.io',
 
     //-- node grpc

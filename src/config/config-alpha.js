@@ -7,8 +7,8 @@ module.exports = {
 
     HTTP_PORT: 3001, // alphanet use to port 3001
     DB_HOST: process.env.ES_HOST || ES_URL,       // 2.0 testnet-dev
-    AVAILABLE_NETWORKS: ['testnet', 'alpha', 'mainnet', 'main', 'test'], // v1 호환성 유지 - main
-    HOST: 'https://api.aergoscan.io',
+    AVAILABLE_NETWORKS: ['alpha'], // v1 호환성 유지 - main
+    HOST: 'https://api-alpha.aergoscan.io',
 
     //-- node grpc
     NODE_GRPC_MAIN: 'mainnet-api.aergo.io:7845',

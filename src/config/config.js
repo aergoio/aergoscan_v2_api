@@ -10,7 +10,7 @@ if (process.env.SELECTED_NETWORK == 'local') {
     module.exports = require('./config-local');
 } else if (process.env.SELECTED_NETWORK == 'testnet') {
     console.log("aergoscan testnet Mode");
-    module.exports = require('./config-mainnet');
+    module.exports = require('./config-testnet');
 } else if (process.env.SELECTED_NETWORK == 'mainnet') {
     console.log("aergoscan mainnet Mode");
     module.exports = require('./config-mainnet');

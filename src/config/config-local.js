@@ -2,10 +2,6 @@ const SELECTED_NETWORK = process.env.SELECTED_NETWORK
 const ES_URL = process.env.ES_URL;
 const ENV_HTTP_PORT = process.env.HTTP_PORT;
 
-// const SELECTED_NETWORK = "testnet"
-// const ES_URL = "52.78.184.31:9200";
-// const ENV_HTTP_PORT = "3000";
-
 console.log(">>>local log SELECTED_NETWORK = "+SELECTED_NETWORK);
 console.log(">>>local log ES_URL           = "+ES_URL);
 console.log(">>>local log ENV_HTTP_PORT    = "+ENV_HTTP_PORT);
@@ -16,7 +12,7 @@ module.exports = {
 
     HTTP_PORT: ENV_HTTP_PORT,
     DB_HOST: process.env.ES_HOST || ES_URL,
-    AVAILABLE_NETWORKS: ['testnet', 'alpha', 'mainnet', 'main', 'test', 'local'], // v1 호환성 유지 - main
+    AVAILABLE_NETWORKS: ['local'], // v1 호환성 유지 - main
     HOST: 'http://localhost:'+ENV_HTTP_PORT,
 
     //-- node grpc

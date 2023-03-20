@@ -8,7 +8,7 @@ import { Amount } from "@herajs/client";
 import cfg from "../../config/config";
 
 const apiRoot = async (req, res, next) => {
-    const publicEndpoints = ['chainInfo', 'maxTokens', 'bestBlock', 'mainBlockInfo', 'blocks', 'transactions', 'token', 'nft', 'tokenTransfers', 'nftTransfers', 'tokenHolder', 'nftHolder', 'nftInventory', 'accountTokens'];
+    const publicEndpoints = ['mainBlockInfo' ,'recentTransactions' ,'txHistory' ,'Blocks' ,'Transactions' ,'contractTx' ,'existedTxTokenList' ,'search' ,'names' ,'accountsBalance' ,'accounts' ,'tokensPrice' ,'token' ,'tokenTransfers' ,'tokenHolder' ,'nft' ,'nftTransfers' ,'nftHolder' ,'tokenBalance' ,'nftInventory' ,'nftGroupCountInventory'];
     return res.json({
         id: req.params.chainId,
         msg: `Aergoscan API for chain ${req.params.chainId}.`,

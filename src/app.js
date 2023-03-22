@@ -74,12 +74,14 @@ chainRouter.param('chainId', function(req, res, next, chainId) {
         return next(new Error('invalid chain id'));
     }
     //-- v1 호환성 유지
+    /*
     if(chainId == "test") {
         req.params.chainId = "testnet";
     } else if(chainId == "main"){
         req.params.chainId = "mainnet";
     }
-    req.apiClient = new ApiClient(req.params.chainId);
+    */
+    req.apiClient = new ApiClient(process.env.SELECTED_NETWORK);
     next();
 });
 

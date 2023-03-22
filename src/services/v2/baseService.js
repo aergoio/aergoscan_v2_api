@@ -10,14 +10,14 @@ import cfg from "../../config/config";
 const apiRoot = async (req, res, next) => {
     const publicEndpoints = ['mainBlockInfo' ,'recentTransactions' ,'txHistory' ,'Blocks' ,'Transactions' ,'contractTx' ,'existedTxTokenList' ,'search' ,'names' ,'accountsBalance' ,'accounts' ,'tokensPrice' ,'token' ,'tokenTransfers' ,'tokenHolder' ,'nft' ,'nftTransfers' ,'nftHolder' ,'tokenBalance' ,'nftInventory' ,'nftGroupCountInventory'];
     return res.json({
-        id: req.params.chainId,
-        msg: `Aergoscan API for chain ${req.params.chainId}.`,
-        resources: publicEndpoints.map(resource => `${cfg.HOST}/${req.params.chainId}/${cfg.VERSION}/${resource}/`)
+        id: process.env.SELECTED_NETWORK,
+        msg: `Aergoscan API for chain ${process.env.SELECTED_NETWORK}.`,
+        resources: publicEndpoints.map(resource => `${cfg.HOST}/${process.env.SELECTED_NETWORK}/${cfg.VERSION}/${resource}/`)
     });
 }
 
 const chainInfo = async (req, res, next) => {
-    const chaininfo = chaininfos[req.params.chainId];
+    const chaininfo = chaininfos[process.env.SELECTED_NETWORK];
     if (!chaininfo) {
         return res.json({error: 'chaininfo not found'});
     }
@@ -25,7 +25,7 @@ const chainInfo = async (req, res, next) => {
 }
 
 const maxTokens = async (req, res, next) => {
-    const chaininfo = chaininfos[req.params.chainId];
+    const chaininfo = chaininfos[process.env.SELECTED_NETWORK];
     if (!chaininfo) {
         return res.send('chaininfo not found');
     }

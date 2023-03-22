@@ -15,12 +15,12 @@ const txHistory = async (req, res, next) => {
                 req.apiClient.aggregateBlocks({ gte: "now-13d/d", lte: "now" }, "1d")
             ]);
 
-            schedulerDataCache.set('txHistory_'+req.params.chainId, {
+            schedulerDataCache.set('txHistory_'+process.env.SELECTED_NETWORK, {
                 txPerDay
             });
         // }
 
-        // return res.json(schedulerDataCache.get('txHistory_'+req.params.chainId));
+        // return res.json(schedulerDataCache.get('txHistory_'+process.env.SELECTED_NETWORK));
         return res.json({
             txPerDay
         })
@@ -65,9 +65,9 @@ const CachedTxHistory = async (req, res, next) => {
  */
 const mainBlockInfo = async (req, res, next) => {
     console.log('mainBlockInfo!!');
-    console.log('mainBlockInfo!!='+req.params.chainId);
+    console.log('mainBlockInfo!!='+process.env.SELECTED_NETWORK);
     try {
-        return res.json(schedulerDataCache.get('mainBlockInfo_'+req.params.chainId));
+        return res.json(schedulerDataCache.get('mainBlockInfo_'+process.env.SELECTED_NETWORK));
     } catch(e) {
         return res.json({error: e});
     }
@@ -179,7 +179,8 @@ const RecentTransactions = async (req, res, next) => {
     console.log('recentTransactions!!');
     try {
 
-        return res.json(schedulerDataCache.get('recentTransactions_'+req.params.chainId));
+        // return res.json(schedulerDataCache.get('recentTransactions_'+req.params.chainId));
+        return res.json(schedulerDataCache.get('recentTransactions_'+process.env.SELECTED_NETWORK));
 
     } catch(e) {
         return res.json({error: e});

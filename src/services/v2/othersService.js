@@ -128,7 +128,7 @@ const names = async (req, res, next) => {
  * ------------ not used
  */
 const totalTokens = async (req, res, next) => {
-    if (req.params.chainId !== 'mainnet') res.send(`not available for chain ${req.params.chainId}`);
+    if (req.params.chainId !== 'mainnet') res.send(`not available for chain ${process.env.SELECTED_NETWORK}`);
     const unit = req.query.unit || 'aer';
     const amount = new Amount("0", 'aergo');
     const [value,] = amount.toUnit(unit).toString().split(" ");

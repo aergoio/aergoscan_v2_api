@@ -16,7 +16,7 @@ const CONTRACT_GEM = "Amhpi4LgVS74YJoZAWXsVgkJfEztYe5KkV3tY7sYtCgXchcKQeCQ";
 const accountBalance = async (req, res, next) => {
     console.log('accountBalance url : '+req.url);
 
-    let aergoClientType = heraGrpcProvider(req.params.chainId);
+    let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK);
 
     /**
      * balance for token and coin

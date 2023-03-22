@@ -122,7 +122,6 @@ export class ApiClient {
     }
 
     async quickSearchTransactions (q, sort="blockno", from=0, size=10) {
-        console.log("this.TX_INDEX = "+this.TX_INDEX)
         const query = {
             requestTimeout: 5000,
             index: this.TX_INDEX,
@@ -189,9 +188,9 @@ export class ApiClient {
             size
         };
         const response = await esDb.search(query);
-        console.log("ACCOUNT_BALANCE_INDEX = "+this.ACCOUNT_BALANCE_INDEX)
-        console.log("query = "+JSON.stringify(query));
-        console.log(response);
+        // console.log("ACCOUNT_BALANCE_INDEX = "+this.ACCOUNT_BALANCE_INDEX)
+        // console.log("query = "+JSON.stringify(query));
+        // console.log(response);
 
         // total-count and limit page count
         const totalCnt = await this.getAccountBalanceCount(q);
@@ -261,8 +260,8 @@ export class ApiClient {
         };
 
         const response = await esDb.search(query);
-        console.log('quickSearchToken q = '+JSON.stringify(query));
-        console.log('quickSearchToken = '+JSON.stringify(response));
+        // console.log('quickSearchToken q = '+JSON.stringify(query));
+        // console.log('quickSearchToken = '+JSON.stringify(response));
 
         const resp = {
             total: response.hits.total.value,
@@ -287,7 +286,7 @@ export class ApiClient {
         };
         const response = await esDb.search(query);
 
-        console.log("response = "+JSON.stringify(response));
+        // console.log("response = "+JSON.stringify(response));
 
         const resp = {
             total: response.hits.total.value,

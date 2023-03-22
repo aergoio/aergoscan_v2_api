@@ -46,12 +46,12 @@ const accountTokens = async (req, res, next) => {
                 ],
             })
             if (!result.aggregations) return [];
-            console.log('aggregation = ' + JSON.stringify(result.aggregations));
+            // console.log('aggregation = ' + JSON.stringify(result.aggregations));
             return result.aggregations.address_unique.buckets;
         }
 
         async function convBucket(bucket) {
-            console.log('convBucket = '+JSON.stringify(bucket));
+            // console.log('convBucket = '+JSON.stringify(bucket));
 
             const token = await getCachedToken(req.apiClient, bucket.key);
             if (!token) return null;
@@ -63,9 +63,8 @@ const accountTokens = async (req, res, next) => {
         }
 
         async function convBucketContract(bucket) {
-            console.log('convBucket = '+JSON.stringify(bucket));
-
-            console.log('req query (contract) = '+ req.query.contract);
+            // console.log('convBucket = '+JSON.stringify(bucket));            //
+            // console.log('req query (contract) = '+ req.query.contract);
 
             const token = await getCachedToken(req.apiClient, bucket.key);
             if (!token) return null;
@@ -82,7 +81,7 @@ const accountTokens = async (req, res, next) => {
 
         let mapped;
         if(req.query.contract){
-            console.log("......exist contract");
+            // console.log("......exist contract");
             for(let i = 0; i < results.length; i++){
                 if(req.query.contract == results.key) {
                     console.log("............results[i] = " + results[i]);

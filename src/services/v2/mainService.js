@@ -175,7 +175,7 @@ const CachedMainBlockInfo = async (req, res, next) => {
  * Recent transactions
  */
 const RecentTransactions = async (req, res, next) => {
-    console.log('recentTransactions!!');
+    // console.log('recentTransactions!!');
     try {
 
         // return res.json(schedulerDataCache.get('recentTransactions_'+req.params.chainId));

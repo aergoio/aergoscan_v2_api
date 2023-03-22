@@ -60,7 +60,7 @@ const contractTx = async (req, res, next) => {
     try {
         const result = await req.apiClient.quickSearchContractTx(req.query.q);
 
-        console.log(JSON.stringify(result.hits));
+        // console.log(JSON.stringify(result.hits));
 
         return res.json(result);
     } catch(e) {

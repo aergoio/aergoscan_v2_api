@@ -64,8 +64,7 @@ const CachedTxHistory = async (req, res, next) => {
  *  - BP number, Latest Bock - hera 에서 가져옴
  */
 const mainBlockInfo = async (req, res, next) => {
-    console.log('mainBlockInfo!!');
-    console.log('mainBlockInfo!!='+process.env.SELECTED_NETWORK);
+    // console.log('mainBlockInfo!!');
     try {
         return res.json(schedulerDataCache.get('mainBlockInfo_'+process.env.SELECTED_NETWORK));
     } catch(e) {

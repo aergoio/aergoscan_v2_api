@@ -27,8 +27,6 @@ const blocks = async (req, res, next) => {
  */
 const transactions = async (req, res, next) => {
     console.log('transactions url : '+req.url);
-    console.log('req.query.q : '+req.query.q);
-    console.log('req.query.sort : '+req.query.sort);
 
     try {
         const result = await req.apiClient.quickSearchTransactions(req.query.q, req.query.sort, parseInt(req.query.from || 0), Math.min(1000, parseInt(req.query.size || 10)));

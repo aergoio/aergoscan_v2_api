@@ -31,8 +31,8 @@ const startup = async () => {
     try{
         schedule.scheduleJob('0/5 * * * * *', function(){
             // console.log('Scheduling CachedMainBlockInfo for mainBlockInfo : ' + new Date());
-            console.log("ScheduleJob = "+cfg.SCHEDULER_BASEURL+cfg.SCHEDULER_NETWORK+"/"+cfg.VERSION+"/"+CachedRecentTransactions);
-            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.SCHEDULER_NETWORK+"/"+cfg.VERSION+"/"+CachedRecentTransactions, "recentTransactions_" + cfg.SCHEDULER_NETWORK);
+            // console.log("ScheduleJob = "+cfg.SCHEDULER_BASEURL+cfg.VERSION+"/"+CachedRecentTransactions);
+            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.VERSION+"/"+CachedRecentTransactions, "recentTransactions_" + cfg.SCHEDULER_NETWORK);
         });
     } catch (error) {
         console.error('scheduleJob[1] =' + error);
@@ -41,7 +41,7 @@ const startup = async () => {
     try{
         schedule.scheduleJob('0/20 * * * * *', function(){
             // console.log('Scheduling CachedMainBlockInfo for mainBlockInfo : ' + new Date());
-            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.SCHEDULER_NETWORK+"/"+cfg.VERSION+"/"+CachedMainBlockInfo, "mainBlockInfo_" + cfg.SCHEDULER_NETWORK);
+            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.VERSION+"/"+CachedMainBlockInfo, "mainBlockInfo_" + cfg.SCHEDULER_NETWORK);
             CacheTokenRegistered();
             CacheNftRegistered();
         });
@@ -64,7 +64,7 @@ const startup = async () => {
     try{
         schedule.scheduleJob('1 * * * * *', function(){
             // console.log('Scheduling CachedTxHistory for txHistory : ' + new Date());
-            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.SCHEDULER_NETWORK+"/"+cfg.VERSION+"/"+CachedTxHistory, "txHistory_" + cfg.SCHEDULER_NETWORK);
+            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.VERSION+"/"+CachedTxHistory, "txHistory_" + cfg.SCHEDULER_NETWORK);
         });
     } catch (error) {
         console.error('scheduleJob[3] =' + error);

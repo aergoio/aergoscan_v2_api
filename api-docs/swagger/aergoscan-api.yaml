@@ -7,7 +7,7 @@ info:
 servers:
   - url: https://api.aergoscan.io/testnet/v2
   - url: https://api.aergoscan.io/mainnet/v2
-  - url: https://api-alpha.aergoscan.io/alpha/v2
+  - url: https://api2-alpha.aergoscan.io/v2
 tags:
 #  - name: baseApi
 #    description: baseApi...

@@ -34,6 +34,7 @@ const cache = {
     swapDataUpdated: null,
 };
 
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 
 
@@ -49,7 +50,8 @@ app.use((err, req, res, next) => {
 chainRouter.route('/').get((req, res) => {
     return res.json({
         msg: 'Welcome to the Aergoscan API. Please select a chain id.',
-        chains: cfg.AVAILABLE_NETWORKS.map(chainId => `${cfg.HOST}/${chainId}/${cfg.VERSION}`)
+        // chains: cfg.AVAILABLE_NETWORKS.map(chainId => `${cfg.HOST}/${chainId}/${cfg.VERSION}`)
+        chains: cfg.AVAILABLE_NETWORKS.map(chainId => `${cfg.HOST}/${cfg.VERSION}`)
     });
 });
 
@@ -69,24 +71,34 @@ chainRouter.route('/swapStat').get(async (req, res) => {
     return res.json({ updated: cache.swapDataUpdated, result: cache.swapData });
 });
 
+/*
 chainRouter.param('chainId', function(req, res, next, chainId) {
+
     if (cfg.AVAILABLE_NETWORKS.indexOf(chainId) === -1) {
         return next(new Error('invalid chain id'));
     }
     //-- v1 호환성 유지
-    /*
     if(chainId == "test") {
         req.params.chainId = "testnet";
     } else if(chainId == "main"){
         req.params.chainId = "mainnet";
     }
-    */
+    console.log(">>>>>>>= " + process.env.SELECTED_NETWORK);
     req.apiClient = new ApiClient(process.env.SELECTED_NETWORK);
     next();
 });
 
-chainRouter.use('/:chainId', apiV1walletConnect, apiV1blocksTransactions, apiV1othersApi);
-chainRouter.use('/:chainId/v2', apiV2base, apiV2main, apiV2blocksTransactions, apiV2tokenNft, apiV2account, apiV2others);
+// chainRouter.use('/:chainId', apiV1walletConnect, apiV1blocksTransactions, apiV1othersApi);
+// chainRouter.use('/:chainId/v2', apiV2base, apiV2main, apiV2blocksTransactions, apiV2tokenNft, apiV2account, apiV2others);
+*/
+
+chainRouter.param('version', function(req, res, next, vversion) {
+    req.apiClient = new ApiClient(process.env.SELECTED_NETWORK);
+    next();
+});
+
+chainRouter.use('/:version', apiV2base, apiV2main, apiV2blocksTransactions, apiV2tokenNft, apiV2account, apiV2others);
+
 
 export default app;
 

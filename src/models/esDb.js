@@ -122,6 +122,7 @@ export class ApiClient {
     }
 
     async quickSearchTransactions (q, sort="blockno", from=0, size=10) {
+        console.log("this.TX_INDEX = "+this.TX_INDEX)
         const query = {
             requestTimeout: 5000,
             index: this.TX_INDEX,

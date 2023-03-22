@@ -12,7 +12,7 @@ const apiRoot = async (req, res, next) => {
     return res.json({
         id: process.env.SELECTED_NETWORK,
         msg: `Aergoscan API for chain ${process.env.SELECTED_NETWORK}.`,
-        resources: publicEndpoints.map(resource => `${cfg.HOST}/${process.env.SELECTED_NETWORK}/${cfg.VERSION}/${resource}/`)
+        resources: publicEndpoints.map(resource => `${cfg.HOST}/${cfg.VERSION}/${resource}/`)
     });
 }
 

@@ -12,8 +12,9 @@ module.exports = {
 
     HTTP_PORT: ENV_HTTP_PORT,
     DB_HOST: process.env.ES_HOST || ES_URL,
-    AVAILABLE_NETWORKS: ['testnet', 'test'], // v1 호환성 유지 - main
-    HOST: 'https://api.aergoscan.io',
+    // AVAILABLE_NETWORKS: ['testnet', 'test'], // v1 호환성 유지 - main
+    AVAILABLE_NETWORKS: ['https://api2-testnet.aergoscan.io'],
+    HOST: 'https://api2-testnet.aergoscan.io',
 
     //-- node grpc
     NODE_GRPC_MAIN: 'mainnet-api.aergo.io:7845',

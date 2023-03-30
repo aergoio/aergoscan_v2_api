@@ -47,6 +47,21 @@ export class ApiClient {
         this.NFT_INDEX = `${chainId}_nft`;
         this.CONTRACT_TX = `${chainId}_contract`;
         this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
+        this.CHAIN_INFO = `${chainId}_chain_info`;
+    }
+
+    async chainInfo (query) {
+        const q = {
+            requestTimeout: 5000,
+            index: this.CHAIN_INFO,
+            body: {
+                query,
+            }
+        };
+        const response = await esDb.search(q);
+        const  result = response.hits.hits.map(item => ({hash: item._id, meta: item._source}));
+        console.log(result);
+        return result;
     }
 
     async searchBlock(opts, single = false) {

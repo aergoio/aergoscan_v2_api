@@ -8,7 +8,7 @@ import { Amount } from "@herajs/client";
 import cfg from "../../config/config";
 
 const apiRoot = async (req, res, next) => {
-    const publicEndpoints = ['mainBlockInfo' ,'recentTransactions' ,'txHistory' ,'Blocks' ,'Transactions' ,'contractTx' ,'existedTxTokenList' ,'search' ,'names' ,'accountsBalance' ,'accounts' ,'tokensPrice' ,'token' ,'tokenTransfers' ,'tokenHolder' ,'nft' ,'nftTransfers' ,'nftHolder' ,'tokenBalance' ,'nftInventory' ,'nftGroupCountInventory'];
+    const publicEndpoints = ['chainInfo', 'mainBlockInfo' ,'recentTransactions' ,'txHistory' ,'Blocks' ,'Transactions' ,'contractTx' ,'existedTxTokenList' ,'search' ,'names' ,'accountsBalance' ,'accounts' ,'tokensPrice' ,'token' ,'tokenTransfers' ,'tokenHolder' ,'nft' ,'nftTransfers' ,'nftHolder' ,'tokenBalance' ,'nftInventory' ,'nftGroupCountInventory'];
     return res.json({
         id: process.env.SELECTED_NETWORK,
         msg: `Aergoscan API for chain ${process.env.SELECTED_NETWORK}.`,
@@ -16,12 +16,28 @@ const apiRoot = async (req, res, next) => {
     });
 }
 
+/*
+// v2.0
 const chainInfo = async (req, res, next) => {
     const chaininfo = chaininfos[process.env.SELECTED_NETWORK];
     if (!chaininfo) {
         return res.json({error: 'chaininfo not found'});
     }
     return res.json(chaininfo);
+}
+*/
+// v2.0
+const chainInfo = async (req, res, next) => {
+    console.log('chainInfo');
+    try {
+        // chain info
+        let result = await req.apiClient.chainInfo(req.query.q);
+
+        return res.json(result);
+    } catch(e) {
+        console.log(e);
+        return res.json({error: e});
+    }
 }
 
 const maxTokens = async (req, res, next) => {

@@ -34,7 +34,7 @@ const token = async (req, res, next) => {
 
         let regContractAddress;
         //-- range : ALL (전체검색), REG(등록된 토큰만 검색)
-        if("REG" === req.query.range && chainInfoPublic==true){
+        if("REG" === req.query.range && chainInfoPublic==true && chainInfoMainnet==true){
             console.log("type REG")
 
             //--  reg-token
@@ -141,7 +141,7 @@ const nft = async (req, res, next) => {
 
         let regContractAddress;
         //-- range : ALL (전체검색), REG(등록된 토큰만 검색)
-        if("REG" === req.query.range && chainInfoPublic==true){
+        if("REG" === req.query.range && chainInfoPublic==true && chainInfoMainnet==true){
             //--  reg-token
             let search = "";
             if(req.query.search){

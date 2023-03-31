@@ -35,7 +35,7 @@ const chainInfo = async (req, res, next) => {
 
         return res.json(result);
     } catch(e) {
-        console.log(e);
+        console.log("chaininfo e = "+e);
         return res.json({error: e});
     }
 }

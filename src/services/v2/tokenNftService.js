@@ -21,12 +21,21 @@ sequelize.sync({ force: false })
  */
 const token = async (req, res, next) => {
     console.log('tokens url : '+req.url);
-    console.log('tokens url : '+req.query.q);
     try {
+        // chain info
+        let chainInfoPublic = false;
+        let chainInfoMainnet = false;
+
+        const chainInfo = await req.apiClient.chainInfo(req.query.q);
+        chainInfoPublic = chainInfo[0].meta.public;
+        chainInfoMainnet = chainInfo[0].meta.mainnet;
+
+        console.log("chainInfoPublic = "+chainInfoPublic + ", chainInfoMainnet = "+chainInfoMainnet);
 
         let regContractAddress;
         //-- range : ALL (전체검색), REG(등록된 토큰만 검색)
-        if("REG" === req.query.range){
+        if("REG" === req.query.range && chainInfoPublic==true){
+            console.log("type REG")
 
             //--  reg-token
             let search = "";
@@ -59,6 +68,7 @@ const token = async (req, res, next) => {
                 regContractAddress = "";
             }
         }else{
+            console.log("type ALL")
             regContractAddress = req.query.q;
         }
 
@@ -100,6 +110,7 @@ const token = async (req, res, next) => {
 
         return res.json(tokenList);
     } catch(e) {
+        console.log(e);
         return res.json({error: e});
     }
 }
@@ -113,15 +124,24 @@ const token = async (req, res, next) => {
  */
 const nft = async (req, res, next) => {
     console.log('tokens url : ' + req.url);
-    console.log('tokens header : ' + req.header('user-agent'));
-    console.log('tokens protocol : ' + req.protocol);
-    console.log('tokens addresses : ' + req.connection.remoteAddress);
+    // console.log('tokens header : ' + req.header('user-agent'));
+    // console.log('tokens protocol : ' + req.protocol);
+    // console.log('tokens addresses : ' + req.connection.remoteAddress);
 
     try {
+        // chain info
+        let chainInfoPublic = false;
+        let chainInfoMainnet = false;
+
+        const chainInfo = await req.apiClient.chainInfo(req.query.q);
+        chainInfoPublic = chainInfo[0].meta.public;
+        chainInfoMainnet = chainInfo[0].meta.mainnet;
+
+        console.log("chainInfoPublic = "+chainInfoPublic + ", chainInfoMainnet = "+chainInfoMainnet);
 
         let regContractAddress;
         //-- range : ALL (전체검색), REG(등록된 토큰만 검색)
-        if("REG" === req.query.range){
+        if("REG" === req.query.range && chainInfoPublic==true){
             //--  reg-token
             let search = "";
             if(req.query.search){

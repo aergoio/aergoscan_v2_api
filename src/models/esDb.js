@@ -55,7 +55,7 @@ export class ApiClient {
             requestTimeout: 5000,
             index: this.CHAIN_INFO,
             body: {
-                query,
+                // query,
             }
         };
         const response = await esDb.search(q);

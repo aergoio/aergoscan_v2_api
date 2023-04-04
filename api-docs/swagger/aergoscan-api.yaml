@@ -5,8 +5,8 @@ info:
   description: "These are passed directly to elasticsearch. For the documentation about `q`, see [this article](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html)"
   version: "1.0.0"
 servers:
-  - url: https://api.aergoscan.io/testnet/v2
-  - url: https://api.aergoscan.io/mainnet/v2
+  - url: https://api2-testnet.aergoscan.io/v2
+  - url: https://api2-mainnet.aergoscan.io/v2
   - url: https://api2-alpha.aergoscan.io/v2
 tags:
 #  - name: baseApi
@@ -22,6 +22,23 @@ tags:
 
 paths:
   ## homeApi
+  /chainInfo:
+    get:
+      tags:
+        - homeApi
+      summary: chain info
+      description: "chain information"
+      responses:
+        200:
+          description: An array of chainInfo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChainInfoRes"
+        default:
+          description: Unexpected error
+          content: { }
+
   /mainBlockInfo:
     get:
       tags:
@@ -855,6 +872,14 @@ components:
   schemas:
     # response
     ## main
+    ChainInfoRes:
+      type: object
+      properties:
+        hash:
+          name: Chain Information
+          description: chain info
+          type: string
+
     MainBlockInfoRes:
       type: object
       properties:

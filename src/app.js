@@ -221,17 +221,6 @@ app.use((err, req, res, next) => {
 
 chainRouter.route('/').get((req, res) => {
 
-    // ip filter
-    const requestIP = req.connection.remoteAddress;
-    console.log(requestIP);
-    console.log(blacklist.indexOf(requestIP))
-    if(blacklist.indexOf(requestIP) >= 0) {
-        console.log('aaccess attempt : ' + requestIP)
-        return res.json({
-            msg: 'Access Denied'
-        });
-    }
-
     return res.json({
         msg: 'Welcome to the Aergoscan API. Please select a chain id.',
         // chains: cfg.AVAILABLE_NETWORKS.map(chainId => `${cfg.HOST}/${chainId}/${cfg.VERSION}`)
@@ -277,6 +266,17 @@ chainRouter.param('chainId', function(req, res, next, chainId) {
 */
 
 chainRouter.param('version', function(req, res, next, vversion) {
+
+    // ip filter
+    const requestIP = req.connection.remoteAddress;
+    if(blacklist.indexOf(requestIP) >= 0) {
+        console.log('aaccess attempt : ' + requestIP)
+        return res.json({
+            msg: 'Access Denied'
+        });
+    }
+
+
     req.apiClient = new ApiClient(process.env.SELECTED_NETWORK);
     next();
 });

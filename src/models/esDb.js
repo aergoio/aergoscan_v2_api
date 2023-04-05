@@ -266,17 +266,19 @@ export class ApiClient {
             requestTimeout: 5000,
             index: this.TOKEN_INDEX,
             body: {
+                from: from,
+                size: size,
                 query : {
                     query_string : {
                         query : q
                     }
-                }
+                },
             }
         };
 
         const response = await esDb.search(query);
-        // console.log('quickSearchToken q = '+JSON.stringify(query));
-        // console.log('quickSearchToken = '+JSON.stringify(response));
+        console.log('quickSearchToken q = '+JSON.stringify(query));
+        console.log('quickSearchToken = '+JSON.stringify(response));
 
         const resp = {
             total: response.hits.total.value,

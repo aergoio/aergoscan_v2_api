@@ -2,6 +2,8 @@ import {nftRegisteredCache, tokenRegisteredCache} from "../../caches/caches";
 import cfg from "../../config/config";
 import {ApiClient} from "../../models/esDb";
 
+const requestIp = require('request-ip');
+
 /**
  * 블록정보 (q, sort, size, from)
  */
@@ -26,7 +28,8 @@ const blocks = async (req, res, next) => {
  * Transactions 정보 (q, sort, size, from)
  */
 const transactions = async (req, res, next) => {
-    console.log('transactions url : '+req.url);
+    // console.log("Client IP: " +requestIp.getClientIp(req));
+    console.log('('+requestIp.getClientIp(req) + ') transactions url : '+req.url);
 
     try {
         const result = await req.apiClient.quickSearchTransactions(req.query.q, req.query.sort, parseInt(req.query.from || 0), Math.min(1000, parseInt(req.query.size || 10)));

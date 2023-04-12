@@ -277,8 +277,8 @@ export class ApiClient {
         };
 
         const response = await esDb.search(query);
-        console.log('quickSearchToken q = '+JSON.stringify(query));
-        console.log('quickSearchToken = '+JSON.stringify(response));
+        // console.log('quickSearchToken q = '+JSON.stringify(query));
+        // console.log('quickSearchToken = '+JSON.stringify(response));
 
         const resp = {
             total: response.hits.total.value,

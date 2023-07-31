@@ -38,16 +38,17 @@ export const waitForDb = () => {
 export class ApiClient {
     constructor(chainId = 'alpha') {
         this.chainId = chainId;
+        this.CHAIN_INFO = `${chainId}_chain_info`;
         this.BLOCK_INDEX = `${chainId}_block`;
         this.TX_INDEX = `${chainId}_tx`;
+        this.CONTRACT_TX = `${chainId}_contract`;
         this.NAME_INDEX = `${chainId}_name`;
         this.TOKEN_INDEX = `${chainId}_token`;
+        this.TOKEN_VERIFIED_INDEX = `${chainId}_token_verified`;
         this.TOKEN_TX_INDEX = `${chainId}_token_transfer`;
         this.ACCOUNT_TOKENS_INDEX = `${chainId}_account_tokens`;
-        this.NFT_INDEX = `${chainId}_nft`;
-        this.CONTRACT_TX = `${chainId}_contract`;
         this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
-        this.CHAIN_INFO = `${chainId}_chain_info`;
+        this.NFT_INDEX = `${chainId}_nft`;
     }
 
     async chainInfo (query) {

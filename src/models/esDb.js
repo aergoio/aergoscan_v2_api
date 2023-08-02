@@ -180,7 +180,7 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchEvents(contract, sort = "blockno:desc", from = 0, size = 10) {
+    async quickSearchEvents(contract, sort = "_id:desc", from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.EVENT_INDEX,

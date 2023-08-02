@@ -41,11 +41,12 @@ export class ApiClient {
         this.CHAIN_INFO = `${chainId}_chain_info`;
         this.BLOCK_INDEX = `${chainId}_block`;
         this.TX_INDEX = `${chainId}_tx`;
-        this.CONTRACT_TX = `${chainId}_contract`;
+        this.CONTRACT_INDEX = `${chainId}_contract`;
+        this.EVENT_INDEX = `${chainId}_event`;
         this.NAME_INDEX = `${chainId}_name`;
         this.TOKEN_INDEX = `${chainId}_token`;
         this.TOKEN_VERIFIED_INDEX = `${chainId}_token_verified`;
-        this.TOKEN_TX_INDEX = `${chainId}_token_transfer`;
+        this.TOKEN_TRANSFER_INDEX = `${chainId}_token_transfer`;
         this.ACCOUNT_TOKENS_INDEX = `${chainId}_account_tokens`;
         this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
         this.NFT_INDEX = `${chainId}_nft`;
@@ -128,7 +129,7 @@ export class ApiClient {
     }
 
     async searchTransactionsRaw(query, extraBody, extraParams) {
-        const q = {
+        const query = {
             requestTimeout: 5000,
             index: this.TX_INDEX,
             body: {
@@ -140,12 +141,12 @@ export class ApiClient {
             },
         };
         if (extraBody) {
-            Object.assign(q.body, extraBody);
+            Object.assign(query.body, extraBody);
         }
         if (extraParams) {
-            Object.assign(q, extraParams);
+            Object.assign(query, extraParams);
         }
-        const response = await esDb.search(q);
+        const response = await esDb.search(query);
         return response;
     }
 
@@ -179,6 +180,105 @@ export class ApiClient {
         return resp;
     }
 
+    async quickSearchEvents(contract, sort = "blockno:desc", from = 0, size = 10) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.EVENT_INDEX,
+            q: `contract:${contract}`,
+            sort,
+            from,
+            size,
+        };
+
+        const response = await esDb.search(query);
+        const resp = {
+            total: response.hits.total.value,
+            from,
+            size,
+            hits: response.hits.hits.map((item) => item._source),
+        };
+        return resp;
+    }
+
+    async quickSearchNames(q, sort = "blockno:desc", from = 0, size = 1) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.NAME_INDEX,
+            q,
+            sort,
+            from,
+            size,
+        };
+        const response = await esDb.search(query);
+        const resp = {
+            total: response.hits.total.value,
+            from,
+            size,
+            hits: response.hits.hits.map((item) => item._source),
+        };
+        return resp;
+    }
+
+    async quickSearchToken(q, sort = "blockno:desc", from = 0, size = 10) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.TOKEN_INDEX,
+            body: {
+                from: from,
+                size: size,
+                query: {
+                    query_string: {
+                        query: q,
+                    },
+                },
+            },
+        };
+
+        const response = await esDb.search(query);
+
+        const resp = {
+            total: response.hits.total.value,
+            limitPageCount: response.hits.total.value,
+            from,
+            size,
+            hits: response.hits.hits.map((item) => ({
+                hash: item._id,
+                meta: item._source,
+            })),
+        };
+        return resp;
+    }
+
+    async quickSearchTokenVerified(q, sort = "blockno:desc", from = 0, size = 10) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.TOKEN_VERIFIED_INDEX,
+            body: {
+                from: from,
+                size: size,
+                query: {
+                    query_string: {
+                        query: q,
+                    },
+                },
+            },
+        };
+
+        const response = await esDb.search(query);
+        const resp = {
+            total: response.hits.total.value,
+            limitPageCount: response.hits.total.value,
+            from,
+            size,
+            hits: response.hits.hits.map((item) => ({
+                hash: item._id,
+                meta: item._source,
+            })),
+        };
+        return resp;
+    }
+
+
     async quickSearchTokenTransfers(
         q,
         sort = "blockno:desc",
@@ -187,23 +287,19 @@ export class ApiClient {
     ) {
         const query = {
             requestTimeout: 5000,
-            index: this.TOKEN_TX_INDEX,
+            index: this.TOKEN_TRANSFER_INDEX,
             q,
             sort,
             from,
             size,
         };
-        // console.log('query = '+JSON.stringify(query));
         const response = await esDb.search(query);
-        // console.log('quickSearchTokenTransfers = '+JSON.stringify(response));
 
         // total-count and limit page count
-        const totalCnt = await this.getTokenTxCount(q);
+        const totalCnt = await this.getTokenTransferCount(q);
         let limitPageCount = totalCnt;
         if (totalCnt > 10000) limitPageCount = 1000 * size;
         const resp = {
-            // total: response.hits.total.value,
-            // total:  await this.getTokenTxCount(q),
             total: totalCnt,
             limitPageCount: limitPageCount,
             from,
@@ -226,9 +322,6 @@ export class ApiClient {
             size,
         };
         const response = await esDb.search(query);
-        // console.log("ACCOUNT_BALANCE_INDEX = "+this.ACCOUNT_BALANCE_INDEX)
-        // console.log("query = "+JSON.stringify(query));
-        // console.log(response);
 
         // total-count and limit page count
         const totalCnt = await this.getAccountBalanceCount(q);
@@ -279,48 +372,6 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchToken(q, sort = "blockno:desc", from = 0, size = 10) {
-        /*
-        const query = {
-            requestTimeout: 5000,
-            index: this.TOKEN_INDEX,
-            q,
-            sort,
-            from,
-            size
-        };
-*/
-        const query = {
-            requestTimeout: 5000,
-            index: this.TOKEN_INDEX,
-            body: {
-                from: from,
-                size: size,
-                query: {
-                    query_string: {
-                        query: q,
-                    },
-                },
-            },
-        };
-
-        const response = await esDb.search(query);
-        // console.log('quickSearchToken q = '+JSON.stringify(query));
-        // console.log('quickSearchToken = '+JSON.stringify(response));
-
-        const resp = {
-            total: response.hits.total.value,
-            limitPageCount: response.hits.total.value,
-            from,
-            size,
-            hits: response.hits.hits.map((item) => ({
-                hash: item._id,
-                meta: item._source,
-            })),
-        };
-        return resp;
-    }
-
     /**
      *
      * @param q
@@ -329,7 +380,7 @@ export class ApiClient {
     async quickSearchContractTx(q) {
         const query = {
             requestTimeout: 5000,
-            index: this.CONTRACT_TX,
+            index: this.CONTRACT_INDEX,
             q,
         };
         const response = await esDb.search(query);
@@ -356,7 +407,7 @@ export class ApiClient {
     async searchTokenTransfersRaw(query, extraBody, extraParams) {
         const q = {
             requestTimeout: 5000,
-            index: this.TOKEN_TX_INDEX,
+            index: this.TOKEN_TRANSFER_INDEX,
             body: {
                 query,
                 size: 50,
@@ -373,25 +424,6 @@ export class ApiClient {
         }
         const response = await esDb.search(q);
         return response;
-    }
-
-    async quickSearchNames(q, sort = "blockno:desc", from = 0, size = 1) {
-        const query = {
-            requestTimeout: 5000,
-            index: this.NAME_INDEX,
-            q,
-            sort,
-            from,
-            size,
-        };
-        const response = await esDb.search(query);
-        const resp = {
-            total: response.hits.total.value,
-            from,
-            size,
-            hits: response.hits.hits.map((item) => item._source),
-        };
-        return resp;
     }
 
     async getBestBlock() {
@@ -430,9 +462,9 @@ export class ApiClient {
         return count;
     }
 
-    async getTokenTxCount(q) {
+    async getTokenTransferCount(q) {
         const args = {
-            index: this.TOKEN_TX_INDEX,
+            index: this.TOKEN_TRANSFER_INDEX,
         };
         if (q) {
             args.q = q;
@@ -622,7 +654,7 @@ export class ApiClient {
     async quickSearchTokenTransfersOwnerList(q) {
         const query = {
             requestTimeout: 5000,
-            index: this.TOKEN_TX_INDEX,
+            index: this.TOKEN_TRANSFER_INDEX,
             body: {
                 size: 0,
                 query: {
@@ -689,7 +721,7 @@ export class ApiClient {
         };
         return new Promise(async (resolve) => {
             const response = await esDb.search({
-                index: this.TOKEN_TX_INDEX,
+                index: this.TOKEN_TRANSFER_INDEX,
                 body: {
                     query,
                     // query: {

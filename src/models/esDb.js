@@ -137,6 +137,7 @@ export class ApiClient {
                 size: 10,
                 sort: {
                     blockno: { order: "desc" },
+                    tx_idx: { order: "asc" },
                 },
             },
         };
@@ -180,14 +181,24 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchEvents(contract, sort = "_id:desc", from = 0, size = 10) {
+    async quickSearchEvents(contract, from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.EVENT_INDEX,
-            q: `contract:${contract}`,
-            sort,
-            from,
-            size,
+            body: {
+                from: from,
+                size: size,
+                query: {
+                    query_string: {
+                        query: `contract:${contract}`,
+                    },
+                },
+                sort: {
+                    blockno: { order: "desc" },
+                    tx_idx: { order: "asc" },
+                    event_idx: { order: "asc" },
+                }
+            }
         };
 
         const response = await esDb.search(query);

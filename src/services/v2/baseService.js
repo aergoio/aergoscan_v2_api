@@ -16,6 +16,7 @@ const apiRoot = async (req, res, next) => {
         "Blocks",
         "Transactions",
         "contractTx",
+        "event",
         "existedTxTokenList",
         "search",
         "names",

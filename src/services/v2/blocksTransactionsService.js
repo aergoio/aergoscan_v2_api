@@ -83,4 +83,21 @@ const contractTx = async (req, res, next) => {
     }
 };
 
-export { blocks, transactions, contractTx };
+
+const event = async (req, res, next) => {
+    console.log("event url : " + req.url);
+    try {
+        const result = await req.apiClient.quickSearchEvents(
+            req.query.contract,
+            parseInt(req.query.from || 0),
+            Math.min(1000, parseInt(req.query.size || 10))
+        );
+        // console.log(JSON.stringify(result.hits));
+        return res.json(result);
+    } catch (e) {
+        console.log("...e = " + e);
+        return res.json({ error: e });
+    }
+};
+
+export { blocks, transactions, contractTx, event };

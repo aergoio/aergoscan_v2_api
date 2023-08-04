@@ -83,7 +83,6 @@ const contractTx = async (req, res, next) => {
     }
 };
 
-
 const event = async (req, res, next) => {
     console.log("event url : " + req.url);
     try {

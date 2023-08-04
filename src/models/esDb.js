@@ -128,12 +128,12 @@ export class ApiClient {
         }));
     }
 
-    async searchTransactionsRaw(query, extraBody, extraParams) {
+    async searchTransactionsRaw(q, extraBody, extraParams) {
         const query = {
             requestTimeout: 5000,
             index: this.TX_INDEX,
             body: {
-                query,
+                q,
                 size: 10,
                 sort: {
                     blockno: { order: "desc" },

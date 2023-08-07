@@ -90,4 +90,17 @@ const bestBlock = async (req, res, next) => {
     }
 };
 
-export { apiRoot, chainInfo, maxTokens, bestBlock };
+/**
+ * first block
+ */
+const firstBlock = async (req, res, next) => {
+    // console.log('bestBlock = '+req.apiClient);
+    console.log("firstBlock!!");
+    try {
+        return res.json(await req.apiClient.getFirstBlock());
+    } catch (e) {
+        return res.json({ error: e });
+    }
+};
+
+export { apiRoot, chainInfo, maxTokens, bestBlock, firstBlock };

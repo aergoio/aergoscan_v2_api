@@ -451,6 +451,20 @@ export class ApiClient {
         );
     }
 
+    async getFirstBlock() {
+        return await this.searchBlock(
+            {
+                body: {
+                    size: 1,
+                    sort: {
+                        no: { order: "asc" },
+                    },
+                },
+            },
+            true
+        );
+    }
+
     async getBlockCount(q) {
         const args = {
             index: this.BLOCK_INDEX,

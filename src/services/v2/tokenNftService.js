@@ -19,6 +19,20 @@ sequelize
         console.error(err);
     });
 
+
+const tokenVerified = async (req, res, next) => {
+    console.log("tokens url : " + req.url);
+
+    const query_q = "type:" + req.query.type;
+    const tokenVerifyList = await req.apiClient.quickSearchTokenVerified(
+        query_q,
+        req.query.sort,
+        parseInt(req.query.from || 0),
+        Math.min(1000, parseInt(req.query.size || 10))
+    );
+    return res.json(tokenVerifyList);
+};
+
 /**
  * Tokens/token detail (q, sort, size, from)
  *  - 등록된 토큰도 검색
@@ -26,7 +40,7 @@ sequelize
  *          url : 외부/내부 정보로 가져와야함
  */
 const token = async (req, res, next) => {
-    console.log("tokens url : " + req.url);
+    console.log("token url : " + req.url);
     try {
         // chain info
         let chainInfoPublic = false;
@@ -531,6 +545,7 @@ const tokenNftBalance = async (req, res, next) => {
 
 export {
     token,
+    tokenVerified,
     nft,
     tokenNftTransfers,
     tokenNftHolder,

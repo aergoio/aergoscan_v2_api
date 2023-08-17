@@ -182,7 +182,7 @@ export class ApiClient {
     }
 
     async quickSearchEvents(tx, contract, from = 0, size = 10) {
-        queryWhere = "";
+        var queryWhere = "";
         if (tx !== null) {
             queryWhere = `tx:${tx}`;
         } else if (contract !== null) {

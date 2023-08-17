@@ -24,6 +24,7 @@ const apiRoot = async (req, res, next) => {
         "accounts",
         "tokensPrice",
         "token",
+        "tokenVerified",
         "tokenTransfers",
         "tokenHolder",
         "nft",

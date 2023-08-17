@@ -181,14 +181,7 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchEvents(tx, contract, from = 0, size = 10) {
-        var queryWhere = "";
-        if (tx !== null) {
-            queryWhere = `tx:${tx}`;
-        } else if (contract !== null) {
-            queryWhere = `contract:${contract}`;
-        }
-
+    async quickSearchEvents(q, from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.EVENT_INDEX,
@@ -197,7 +190,7 @@ export class ApiClient {
                 size: size,
                 query: {
                     query_string: {
-                        query: queryWhere,
+                        query: q,
                     },
                 },
                 sort: {

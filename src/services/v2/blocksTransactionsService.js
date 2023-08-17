@@ -80,12 +80,11 @@ const contractTx = async (req, res, next) => {
     }
 };
 
-const txEvent = async (req, res, next) => {
-    console.log("txEvent url : " + req.url);
+const event = async (req, res, next) => {
+    console.log("event url : " + req.url);
     try {
         const result = await req.apiClient.quickSearchEvents(
-            req.query.tx,
-            null,
+            req.query.q,
             parseInt(req.query.from || 0),
             Math.min(1000, parseInt(req.query.size || 10))
         );
@@ -97,21 +96,5 @@ const txEvent = async (req, res, next) => {
     }
 }
 
-const contractEvent = async (req, res, next) => {
-    console.log("contractEvent url : " + req.url);
-    try {
-        const result = await req.apiClient.quickSearchEvents(
-            null,
-            req.query.contract,
-            parseInt(req.query.from || 0),
-            Math.min(1000, parseInt(req.query.size || 10))
-        );
-        // console.log(JSON.stringify(result.hits));
-        return res.json(result);
-    } catch (e) {
-        console.log("...e = " + e);
-        return res.json({ error: e });
-    }
-};
 
-export { blocks, transactions, contractTx, txEvent, contractEvent };
+export { blocks, transactions, contractTx, event };

@@ -23,9 +23,9 @@ sequelize
 const tokenVerified = async (req, res, next) => {
     console.log("tokens url : " + req.url);
 
-    const query_q = "type:" + req.query.type;
-    const tokenVerifyList = await req.apiClient.quickSearchTokenVerified(
-        query_q,
+    req.query.q += `AND verified_status:verified`;
+    const tokenVerifyList = await req.apiClient.quickSearchToken(
+        req.query.q,
         req.query.sort,
         parseInt(req.query.from || 0),
         Math.min(1000, parseInt(req.query.size || 10))

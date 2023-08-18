@@ -45,7 +45,6 @@ export class ApiClient {
         this.EVENT_INDEX = `${chainId}_event`;
         this.NAME_INDEX = `${chainId}_name`;
         this.TOKEN_INDEX = `${chainId}_token`;
-        this.TOKEN_VERIFIED_INDEX = `${chainId}_token_verified`;
         this.TOKEN_TRANSFER_INDEX = `${chainId}_token_transfer`;
         this.ACCOUNT_TOKENS_INDEX = `${chainId}_account_tokens`;
         this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
@@ -259,36 +258,6 @@ export class ApiClient {
         };
         return resp;
     }
-
-    async quickSearchTokenVerified(q, sort = "blockno:desc", from = 0, size = 10) {
-        const query = {
-            requestTimeout: 5000,
-            index: this.TOKEN_VERIFIED_INDEX,
-            body: {
-                from: from,
-                size: size,
-                query: {
-                    query_string: {
-                        query: q,
-                    },
-                },
-            },
-        };
-
-        const response = await esDb.search(query);
-        const resp = {
-            total: response.hits.total.value,
-            limitPageCount: response.hits.total.value,
-            from,
-            size,
-            hits: response.hits.hits.map((item) => ({
-                hash: item._id,
-                meta: item._source,
-            })),
-        };
-        return resp;
-    }
-
 
     async quickSearchTokenTransfers(
         q,

@@ -1,5 +1,5 @@
-const swaggerUi = require("swagger-ui-express")
-const swaggerJsDoc = require("swagger-jsdoc")
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 
 const options = {
     swaggerDefinition: {
@@ -12,13 +12,15 @@ const options = {
         servers: [
             {
                 url: "http://localhost:3000/api-docs",
-
             },
         ],
     },
-    apis: [__dirname+'/../src/api/v2/*.js', __dirname+'/../src/api/v1/*.js'],
-}
+    apis: [
+        __dirname + "/../src/api/v2/*.js",
+        __dirname + "/../src/api/v1/*.js",
+    ],
+};
 
-const specs = swaggerJsDoc(options)
+const specs = swaggerJsDoc(options);
 
-module.exports = { swaggerUi, specs}
+module.exports = { swaggerUi, specs };

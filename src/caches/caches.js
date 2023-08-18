@@ -11,7 +11,6 @@ const nftRegisteredCache = new Map();
 //-- Token Price
 const tokePriceRegisteredCache = new Map();
 
-
 async function fetchToken(apiClient, address) {
     const result = await apiClient.quickSearchToken(`_id:${address}`);
     if (result.hits && result.hits.length) {
@@ -49,4 +48,12 @@ function getCachedTokensPrice(apiClient, address) {
     return fetch;
 }
 
-export { schedulerDataCache, tokenCache, getCachedToken, addCachedTokenData, tokenRegisteredCache, nftRegisteredCache, tokePriceRegisteredCache  }
+export {
+    schedulerDataCache,
+    tokenCache,
+    getCachedToken,
+    addCachedTokenData,
+    tokenRegisteredCache,
+    nftRegisteredCache,
+    tokePriceRegisteredCache,
+};

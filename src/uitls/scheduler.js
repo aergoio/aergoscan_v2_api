@@ -1,23 +1,27 @@
-import {tokenRegisteredCache, nftRegisteredCache, tokePriceRegisteredCache} from "../caches/caches";
+import {
+    tokenRegisteredCache,
+    nftRegisteredCache,
+    tokePriceRegisteredCache,
+} from "../caches/caches";
 
-const schedule = require('node-schedule');
-const axios = require('axios');
-import cfg from '../config/config';
+const schedule = require("node-schedule");
+const axios = require("axios");
+import cfg from "../config/config";
 // import {QueryTypes} from "sequelize";
 
-const { sequelize, QueryTypes } = require('../models/index');
-sequelize.sync({ force: false })
+const { sequelize, QueryTypes } = require("../models/index");
+sequelize
+    .sync({ force: false })
     .then(() => {
-        console.log('DB Connected');
+        console.log("DB Connected");
     })
     .catch((err) => {
         console.error(err);
     });
 
-
 // url path
-const CachedMainBlockInfo         = "CachedMainBlockInfo";
-const CachedRecentTransactions    = "CachedRecentTransactions";
+const CachedMainBlockInfo = "CachedMainBlockInfo";
+const CachedRecentTransactions = "CachedRecentTransactions";
 // const CachedTxHistory             = "CachedTxHistory";              // 프론트에서 사용 안함
 
 /**
@@ -27,26 +31,34 @@ const CachedRecentTransactions    = "CachedRecentTransactions";
  * @returns {Promise<void>}
  */
 const startup = async () => {
-
-    try{
-        schedule.scheduleJob('0/5 * * * * *', function(){
+    try {
+        schedule.scheduleJob("0/5 * * * * *", function () {
             // console.log('Scheduling CachedMainBlockInfo for mainBlockInfo : ' + new Date());
             // console.log("ScheduleJob = "+cfg.SCHEDULER_BASEURL+cfg.VERSION+"/"+CachedRecentTransactions);
-            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.VERSION+"/"+CachedRecentTransactions, "recentTransactions_" + cfg.SCHEDULER_NETWORK);
+            CacheApiCall(
+                cfg.SCHEDULER_BASEURL +
+                    cfg.VERSION +
+                    "/" +
+                    CachedRecentTransactions,
+                "recentTransactions_" + cfg.SCHEDULER_NETWORK
+            );
         });
     } catch (error) {
-        console.error('scheduleJob[1] =' + error);
+        console.error("scheduleJob[1] =" + error);
     }
 
-    try{
-        schedule.scheduleJob('0/20 * * * * *', function(){
+    try {
+        schedule.scheduleJob("0/20 * * * * *", function () {
             // console.log('Scheduling CachedMainBlockInfo for mainBlockInfo : ' + new Date());
-            CacheApiCall(cfg.SCHEDULER_BASEURL+cfg.VERSION+"/"+CachedMainBlockInfo, "mainBlockInfo_" + cfg.SCHEDULER_NETWORK);
+            CacheApiCall(
+                cfg.SCHEDULER_BASEURL + cfg.VERSION + "/" + CachedMainBlockInfo,
+                "mainBlockInfo_" + cfg.SCHEDULER_NETWORK
+            );
             CacheTokenRegistered();
             CacheNftRegistered();
         });
     } catch (error) {
-        console.error('scheduleJob[2] =' + error);
+        console.error("scheduleJob[2] =" + error);
     }
 
     // token price
@@ -70,41 +82,43 @@ const startup = async () => {
         console.error('scheduleJob[3] =' + error);
     }
     */
-}
+};
 
-console.log('Job Scheduler started at ' + new Date());
+console.log("Job Scheduler started at " + new Date());
 startup();
 
-
-async function CacheApiCall(apiUrl, key){
+async function CacheApiCall(apiUrl, key) {
     // console.log(apiUrl)
     try {
         axios({
             timeout: 4000,
-            method: 'get',
+            method: "get",
             url: apiUrl,
             params: {
-                key: key
-            }
-        }).then(function (response) {
-            // console.log(response);
-        }).catch(function (error) {
-            console.error('scheduleJob CacheApiCall[1] : ' +apiUrl + '=' + error);
-        });
-
+                key: key,
+            },
+        })
+            .then(function (response) {
+                // console.log(response);
+            })
+            .catch(function (error) {
+                console.error(
+                    "scheduleJob CacheApiCall[1] : " + apiUrl + "=" + error
+                );
+            });
     } catch (error) {
-        console.error('scheduleJob CacheApiCall[2] =' + error);
+        console.error("scheduleJob CacheApiCall[2] =" + error);
     }
 }
 
 async function CacheTokenRegistered() {
-
-    try{
-        const query = 'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC1" AND status=3 AND is_view="Y"';
+    try {
+        const query =
+            'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC1" AND status=3 AND is_view="Y"';
         // const query = 'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC1" AND is_view=?';
         // const query = 'select token_address, token_name, token_symbol, token_url, token_image from token_list where type = "ARC1" AND is_view = (:is_view) ';
         // console.log("query = "+query);
-        const params = ['N']
+        const params = ["N"];
         let regContractAddress = "_id:";
 
         /*
@@ -117,35 +131,39 @@ async function CacheTokenRegistered() {
 
         );
         */
-        const [result , metadata] = await sequelize.query(query);
+        const [result, metadata] = await sequelize.query(query);
         // console.log('....'+JSON.stringify(result));
 
         tokenRegisteredCache.clear();
 
         for (let i = 0; i < result.length; i++) {
-            tokenRegisteredCache.set(result[i].token_address, JSON.stringify(result[i]));
+            tokenRegisteredCache.set(
+                result[i].token_address,
+                JSON.stringify(result[i])
+            );
         }
-
     } catch (error) {
-    console.error('scheduleJob CacheNftRegistered =' + error);
+        console.error("scheduleJob CacheNftRegistered =" + error);
     }
 }
 
 async function CacheNftRegistered() {
+    try {
+        const query =
+            'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC2" AND status=3 AND is_view="Y"';
 
-    try{
-        const query = 'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC2" AND status=3 AND is_view="Y"';
-
-        const [result , metadata] = await sequelize.query(query);
+        const [result, metadata] = await sequelize.query(query);
 
         nftRegisteredCache.clear();
 
         for (let i = 0; i < result.length; i++) {
-            nftRegisteredCache.set(result[i].token_address, JSON.stringify(result[i]));
+            nftRegisteredCache.set(
+                result[i].token_address,
+                JSON.stringify(result[i])
+            );
         }
-
     } catch (error) {
-        console.error('scheduleJob CacheNftRegistered =' + error);
+        console.error("scheduleJob CacheNftRegistered =" + error);
     }
 }
 
@@ -155,29 +173,30 @@ async function CacheNftRegistered() {
  * @constructor
  */
 async function CacheTokensPriceRegistered() {
-
     // aergo price
     const apiUrl = "https://api.coingecko.com/api/v3/simple/price";
     const tokenName = "aergo";
     // const erc20ContractAddresses = '0x91af0fbb28aba7e31403cb457106ce79397fd4e6';
     const vsCurrencies = "usd,krw";
 
-    try{
+    try {
         const response = await axios.get(apiUrl, {
             params: {
                 // contract_addresses: erc20ContractAddresses,
                 ids: tokenName,
-                vs_currencies: vsCurrencies
-            }
+                vs_currencies: vsCurrencies,
+            },
         });
-        const price = response.data[tokenName]
+        const price = response.data[tokenName];
 
-        const [result] = ([{
-            name : tokenName,
-            // erc20CA : erc20ContractAddresses,
-            // current : vsCurrencies,
-            price : price,
-        }])
+        const [result] = [
+            {
+                name: tokenName,
+                // erc20CA : erc20ContractAddresses,
+                // current : vsCurrencies,
+                price: price,
+            },
+        ];
 
         console.log("111111 = " + JSON.stringify(result));
 
@@ -186,10 +205,8 @@ async function CacheTokensPriceRegistered() {
         //     tokePriceRegisteredCache.set(result[i].token_address, JSON.stringify(result[i]));
         // }
 
-
         // console.log(">>>>>>>"+tokePriceRegisteredCache.get(erc20ContractAddresses));
-
     } catch (error) {
-        console.error('scheduleJob CacheNftRegistered =' + error);
+        console.error("scheduleJob CacheNftRegistered =" + error);
     }
 }

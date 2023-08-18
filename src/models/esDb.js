@@ -127,12 +127,12 @@ export class ApiClient {
         }));
     }
 
-    async searchTransactionsRaw(q, extraBody, extraParams) {
-        const query = {
+    async searchTransactionsRaw(query, extraBody, extraParams) {
+        const q = {
             requestTimeout: 5000,
             index: this.TX_INDEX,
             body: {
-                q,
+                query,
                 size: 10,
                 sort: {
                     blockno: { order: "desc" },
@@ -141,12 +141,12 @@ export class ApiClient {
             },
         };
         if (extraBody) {
-            Object.assign(query.body, extraBody);
+            Object.assign(q.body, extraBody);
         }
         if (extraParams) {
-            Object.assign(query, extraParams);
+            Object.assign(q, extraParams);
         }
-        const response = await esDb.search(query);
+        const response = await esDb.search(q);
         return response;
     }
 

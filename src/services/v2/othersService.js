@@ -166,7 +166,7 @@ const totalTokens = async (req, res, next) => {
  */
 const search = async (req, res, next) => {
     const query = req.query.q;
-    console.log(" serarch = " + query);
+    console.log(" search = " + query);
     if (query.length < 5) {
         return res.json({ error: "Try a longer query" });
     }

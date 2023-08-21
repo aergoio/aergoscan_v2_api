@@ -14,7 +14,7 @@ import {
 const apiV2 = express.Router({ mergeParams: true });
 
 apiV2.route("/token").get(token);
-apiV2.route("tokenVerified").get(tokenVerified)
+apiV2.route("/tokenVerified").get(tokenVerified)
 apiV2.route("/nft").get(nft);
 apiV2.route("/tokenTransfers|nftTransfers").get(tokenNftTransfers);
 apiV2.route("/tokenHolder|nftHolder").get(tokenNftHolder);

@@ -1,1653 +1,1649 @@
 # aergoscan 2.0 API
 openapi: "3.0.0"
 info:
-  title: aergoscan 2.0 API
-  description: "These are passed directly to elasticsearch. For the documentation about `q`, see [this article](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html)"
-  version: "1.0.0"
+    title: aergoscan 2.0 API
+    description: "These are passed directly to elasticsearch. For the documentation about `q`, see [this article](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html)"
+    version: "1.0.0"
 servers:
-  - url: https://api2-testnet.aergoscan.io/v2
-  - url: https://api2-mainnet.aergoscan.io/v2
-  - url: https://api2-alpha.aergoscan.io/v2
+    - url: https://api2-testnet.aergoscan.io/v2
+    - url: https://api2-mainnet.aergoscan.io/v2
+    - url: https://api2-alpha.aergoscan.io/v2
 tags:
-#  - name: baseApi
-#    description: baseApi...
-  - name: homeApi
-    description: Home
-  - name: blocksTransactionsApi
-    description: Blocks / Transactions
-  - name: othersApi
-    description: others (existedTxTokenList, serarch)
-  - name: tokenNftApi
-    description: Token / NFT
+    #  - name: baseApi
+    #    description: baseApi...
+    - name: homeApi
+      description: Home
+    - name: blocksTransactionsApi
+      description: Blocks / Transactions
+    - name: othersApi
+      description: others (existedTxTokenList, serarch)
+    - name: tokenNftApi
+      description: Token / NFT
 
 paths:
-  ## homeApi
-  /chainInfo:
-    get:
-      tags:
-        - homeApi
-      summary: chain info
-      description: "chain information"
-      responses:
-        200:
-          description: An array of chainInfo
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ChainInfoRes"
-        default:
-          description: Unexpected error
-          content: { }
+    ## homeApi
+    /chainInfo:
+        get:
+            tags:
+                - homeApi
+            summary: chain info
+            description: "chain information"
+            responses:
+                200:
+                    description: An array of chainInfo
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ChainInfoRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /mainBlockInfo:
-    get:
-      tags:
-        - homeApi
-      summary: Home Info
-      description: "blockCount / txTotal / maxTps / maxTpm"
-      responses:
-        200:
-          description: An array of mainBlockInfo
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MainBlockInfoRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /mainBlockInfo:
+        get:
+            tags:
+                - homeApi
+            summary: Home Info
+            description: "blockCount / txTotal / maxTps / maxTpm"
+            responses:
+                200:
+                    description: An array of mainBlockInfo
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MainBlockInfoRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /recentTransactions:
-    get:
-      tags:
-        - homeApi
-      summary: 최근 트랜잭션 리스트
-      description: 최근 트랜잭션 리스트
-      responses:
-        200:
-          description: An array of recentTransactions
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RecentTransactionsRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /recentTransactions:
+        get:
+            tags:
+                - homeApi
+            summary: 최근 트랜잭션 리스트
+            description: 최근 트랜잭션 리스트
+            responses:
+                200:
+                    description: An array of recentTransactions
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/RecentTransactionsRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /txHistory:
-    get:
-      tags:
-        - homeApi
-      summary: transaction 일일 통계
-      description: Transaction 일일 통계
-      responses:
-        200:
-          description: An array of txHstory
-          content:
-            application/json:
-              schema:
-                  $ref: "#/components/schemas/TxPerDayRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /txHistory:
+        get:
+            tags:
+                - homeApi
+            summary: transaction 일일 통계
+            description: Transaction 일일 통계
+            responses:
+                200:
+                    description: An array of txHstory
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TxPerDayRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  ## blocksTransactionsApi
-  /blocks:
-    get:
-      tags:
-        - blocksTransactionsApi
-      summary: blocks list
-      description: blocks list
-      parameters:
-        - name: q
-          description: block number (no:{block-height})
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: sort
-          description: sort (no:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: no:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type : string
-            default: 20
-      responses:
-        200:
-          description: An array of blocks
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BlocksRes"
-        default:
-          description: Unexpected error
-          content: {}
+    ## blocksTransactionsApi
+    /blocks:
+        get:
+            tags:
+                - blocksTransactionsApi
+            summary: blocks list
+            description: blocks list
+            parameters:
+                - name: q
+                  description: block number (no:{block-height})
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (no:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: no:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of blocks
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/BlocksRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /transactions:
-    get:
-      tags:
-        - blocksTransactionsApi
-      summary: transactions list
-      description: transactions list
-      parameters:
-        - name: q
-          description: "1. 전체 검색시 q 파라미터 없음
-            <br><br>2. 카테고리로 검색
-            <br> - category:call (payload, call, token, governance, system, staking, voting, name, namecreate, nameupdate, enterprise, conf, cluster, deploy, redeploy, multicall)
-            <br><br>3. 주소로 검색
-            <br> - (from:{wallet} OR to:{wallet})
-            <br><br>4. 블록 넘버 검색
-            <br> - blockno:{block number}
-            <br><br>5. 블록 hash 검색
-            <br> -  _id:{hash}"
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: sort
-          description: sort (blockno:desc, amount_float:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: blockno:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of transactions
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TransactionsRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /transactions:
+        get:
+            tags:
+                - blocksTransactionsApi
+            summary: transactions list
+            description: transactions list
+            parameters:
+                - name: q
+                  description: "1. 전체 검색시 q 파라미터 없음
+                      <br><br>2. 카테고리로 검색
+                      <br> - category:call (payload, call, token, governance, system, staking, voting, name, namecreate, nameupdate, enterprise, conf, cluster, deploy, redeploy, multicall)
+                      <br><br>3. 주소로 검색
+                      <br> - (from:{wallet} OR to:{wallet})
+                      <br><br>4. 블록 넘버 검색
+                      <br> - blockno:{block number}
+                      <br><br>5. 블록 hash 검색
+                      <br> -  _id:{hash}"
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (blockno:desc, amount_float:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: blockno:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of transactions
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TransactionsRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /contractTx:
-    get:
-      tags:
-        - blocksTransactionsApi
-      summary: contract transaction info
-      description: contract transaction info
-      parameters:
-        - name: q
-          description:
-            _id:{contract address}
-          in: query
-          required: true
-          schema:
-            type: string
-            default: _id:{contract address}
-      responses:
-        200:
-          description: An array of contractTx
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ContractTxRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /contractTx:
+        get:
+            tags:
+                - blocksTransactionsApi
+            summary: contract transaction info
+            description: contract transaction info
+            parameters:
+                - name: q
+                  description: _id:{contract address}
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: _id:{contract address}
+            responses:
+                200:
+                    description: An array of contractTx
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ContractTxRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  ## tokenNft
-  /token:
-    get:
-      tags:
-        - tokenNftApi
-      summary: Token info
-      description: Token info
-      parameters:
-        - name: q
-          description: 'Token List / Detail
-            <br>1. token 전체 리스트 검색 시 : type:ARC1
-            <br><br>2. token 상세 : _id:{contract address}
-            <br><br>3. (name:{search-token-name-or-symbol}* OR symbol:*{search-token-name-or-symbol}*) AND type:ARC1
-            <br><br>4. (name_lower:{search-token-name-or-symbol}* OR symbol_lower:*{search-token-name-or-symbol}*) AND type:ARC1'
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: search
-          description: 검색어 (q-query에서 name에 들어가는 값과 같은 값 입력)
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: range
-          description: "검색 범위
-            <br>ALL  : 전체 검색 (등록이 안된 토큰도 검색)
-            <br>REG : 등록된 토큰에서 검색"
-          in: query
-          required: true
-          schema:
-            type: string
-            enum:
-              - ALL
-              - REG
-        - name: sort
-          description: sort (blockno:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: blockno:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of token
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenNftApiRes"
-        default:
-          description: Unexpected error
-          content: { }
+    ## tokenNft
+    /token:
+        get:
+            tags:
+                - tokenNftApi
+            summary: Token info
+            description: Token info
+            parameters:
+                - name: q
+                  description: "Token List / Detail
+                      <br>1. token 전체 리스트 검색 시 : type:ARC1
+                      <br><br>2. token 상세 : _id:{contract address}
+                      <br><br>3. (name:{search-token-name-or-symbol}* OR symbol:*{search-token-name-or-symbol}*) AND type:ARC1
+                      <br><br>4. (name_lower:{search-token-name-or-symbol}* OR symbol_lower:*{search-token-name-or-symbol}*) AND type:ARC1"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: search
+                  description: 검색어 (q-query에서 name에 들어가는 값과 같은 값 입력)
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: range
+                  description: "검색 범위
+                      <br>ALL  : 전체 검색 (등록이 안된 토큰도 검색)
+                      <br>REG : 등록된 토큰에서 검색"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      enum:
+                          - ALL
+                          - REG
+                - name: sort
+                  description: sort (blockno:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: blockno:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of token
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TokenNftApiRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  # tokenTransfers|nftTransfers
-  /tokenTransfers:
-    get:
-      tags:
-        - tokenNftApi
-      summary: Token Transfer info
-      description: Token Transfer info
-      parameters:
-        - name: q
-          description:  "<br>1. token에서 조회시       -> address:{token-address} AND token_id:<0
-            <br>2. account에서 조회시(전체)-> (from:{wallet-address} OR to:{wallet-address}) AND token_id:<0
-            <br>3. account에서 필터 검색 -> (from:{wallet-address} OR to:{wallet-address) AND address:{token-address} AND token_id:<0"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: sort
-          description: sort (ts:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: ts:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of tokenTransfers
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenNftTransfersRes"
-        default:
-          description: Unexpected error
-          content: { }
+    # tokenTransfers|nftTransfers
+    /tokenTransfers:
+        get:
+            tags:
+                - tokenNftApi
+            summary: Token Transfer info
+            description: Token Transfer info
+            parameters:
+                - name: q
+                  description:
+                      "<br>1. token에서 조회시       -> address:{token-address} AND token_id:<0
+                      <br>2. account에서 조회시(전체)-> (from:{wallet-address} OR to:{wallet-address}) AND token_id:<0
+                      <br>3. account에서 필터 검색 -> (from:{wallet-address} OR to:{wallet-address) AND address:{token-address} AND token_id:<0"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (ts:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: ts:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of tokenTransfers
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TokenNftTransfersRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  # tokenHolder|nftHolder
-  /tokenHolder:
-    get:
-      tags:
-        - tokenNftApi
-      summary: tokenHolderr info
-      description: tokenHolder info
-      parameters:
-        - name: q
-          description:  "address:{wallet-address} AND type:ARC1 AND balance_float:>0
-            <br>1. 해당토큰 balance 보유량 조회 - address:{address}
-            <br>2. arc1 일때 : type:ARC1
-            <br>3. 보유량이 0 보다 큰 것만 조회 : balance_float:>0"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: sort
-          description: sort (balance_float:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: balance_float:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of tokenHolder
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenHolderRes"
-        default:
-          description: Unexpected error
-          content: { }
-  /nft:
-    get:
-      tags:
-        - tokenNftApi
-      summary: NFT info
-      description: NFT info
-      parameters:
-        - name: q
-          description: "NFT List / Detail
-            <br>1. nft 전체 리스트 검색 시 : type:ARC2
-            <br><br>2. nft 상세 : _id:{contract address}
-            <br><br>3. (name:*{search-nft-name-or-symbol}* OR symbol:*{search-nft-name-or-symbol}*) AND type:ARC2"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: search
-          description: 검색어 (q-query에서 name에 들어가는 값과 같은 값 입력)
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: range
-          description: "검색 범위
-            <br>ALL  : 전체 검색 (등록이 안된 토큰도 검색)
-            <br>REG : 등록된 토큰에서 검색"
-          in: query
-          required: true
-          schema:
-            type: string
-            enum:
-              - ALL
-              - REG
-        - name: sort
-          description: sort (blockno:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: blockno:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of nft
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenNftApiRes"
-        default:
-          description: Unexpected error
-          content: { }
+    # tokenHolder|nftHolder
+    /tokenHolder:
+        get:
+            tags:
+                - tokenNftApi
+            summary: tokenHolderr info
+            description: tokenHolder info
+            parameters:
+                - name: q
+                  description:
+                      "address:{wallet-address} AND type:ARC1 AND balance_float:>0
+                      <br>1. 해당토큰 balance 보유량 조회 - address:{address}
+                      <br>2. arc1 일때 : type:ARC1
+                      <br>3. 보유량이 0 보다 큰 것만 조회 : balance_float:>0"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (balance_float:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: balance_float:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of tokenHolder
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TokenHolderRes"
+                default:
+                    description: Unexpected error
+                    content: {}
+    /nft:
+        get:
+            tags:
+                - tokenNftApi
+            summary: NFT info
+            description: NFT info
+            parameters:
+                - name: q
+                  description: "NFT List / Detail
+                      <br>1. nft 전체 리스트 검색 시 : type:ARC2
+                      <br><br>2. nft 상세 : _id:{contract address}
+                      <br><br>3. (name:*{search-nft-name-or-symbol}* OR symbol:*{search-nft-name-or-symbol}*) AND type:ARC2"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: search
+                  description: 검색어 (q-query에서 name에 들어가는 값과 같은 값 입력)
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: range
+                  description: "검색 범위
+                      <br>ALL  : 전체 검색 (등록이 안된 토큰도 검색)
+                      <br>REG : 등록된 토큰에서 검색"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      enum:
+                          - ALL
+                          - REG
+                - name: sort
+                  description: sort (blockno:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: blockno:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of nft
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TokenNftApiRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  # tokenTransfers|nftTransfers
-  /nftTransfers:
-    get:
-      tags:
-        - tokenNftApi
-      summary: NFT Transfer info
-      description: NFT Transfer info
-      parameters:
-        - name: q
-          description:  "<br>1. NFT에서 조회시       -> address:{token-address} AND token_id:>0
-            <br>2. account에서 조회시(전체)-> (from:{wallet-address} OR to:{wallet-address}) AND token_id:>0
-            <br>3. account에서 필터 검색 -> (from:{wallet-address} OR to:{wallet-address) AND address:{token-address} AND token_id:>0"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: sort
-          description: sort (ts:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: ts:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of nftTransfers
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenNftTransfersRes"
-        default:
-          description: Unexpected error
-          content: { }
+    # tokenTransfers|nftTransfers
+    /nftTransfers:
+        get:
+            tags:
+                - tokenNftApi
+            summary: NFT Transfer info
+            description: NFT Transfer info
+            parameters:
+                - name: q
+                  description:
+                      "<br>1. NFT에서 조회시       -> address:{token-address} AND token_id:>0
+                      <br>2. account에서 조회시(전체)-> (from:{wallet-address} OR to:{wallet-address}) AND token_id:>0
+                      <br>3. account에서 필터 검색 -> (from:{wallet-address} OR to:{wallet-address) AND address:{token-address} AND token_id:>0"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (ts:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: ts:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of nftTransfers
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TokenNftTransfersRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  #  tokenHolder|nftHolder
-  /nftHolder:
-    get:
-      tags:
-        - tokenNftApi
-      summary: nftHolderr info
-      description: nftHolderr info
-      parameters:
-        - name: q
-          description:  "address:{wallet-address} AND type:ARC2 AND balance_float:>0
-            <br>1. 해당토큰 holder 보유량 조회 - address:{address}
-            <br>2. arc2 일때 : type:ARC2
-            <br>3. 보유량이 0 보다 큰 것만 조회 : balance_float:>0"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: sort
-          description: sort (balance_float:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: balance_float:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of nftHolder
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenHolderRes"
-        default:
-          description: Unexpected error
-          content: { }
+    #  tokenHolder|nftHolder
+    /nftHolder:
+        get:
+            tags:
+                - tokenNftApi
+            summary: nftHolderr info
+            description: nftHolderr info
+            parameters:
+                - name: q
+                  description:
+                      "address:{wallet-address} AND type:ARC2 AND balance_float:>0
+                      <br>1. 해당토큰 holder 보유량 조회 - address:{address}
+                      <br>2. arc2 일때 : type:ARC2
+                      <br>3. 보유량이 0 보다 큰 것만 조회 : balance_float:>0"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (balance_float:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: balance_float:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of nftHolder
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TokenHolderRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /tokenBalance:
-    get:
-      tags:
-        - tokenNftApi
-      summary: tokenBalance info
-      description: tokenBalance info
-      parameters:
-        - name: q
-          description: "1. 해당토큰 주소 : address:{address} AND type:ARC1
-            <br> 2. Account 에서 검색 : account:{address} AND type:ARC1
-            <br> - 보유량이 0 보다 큰 것만 조회 : balance_float:>0"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: sort
-          description: sort (balance_float:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: balance_float:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of tokenBalance
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenBalanceRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /tokenBalance:
+        get:
+            tags:
+                - tokenNftApi
+            summary: tokenBalance info
+            description: tokenBalance info
+            parameters:
+                - name: q
+                  description:
+                      "1. 해당토큰 주소 : address:{address} AND type:ARC1
+                      <br> 2. Account 에서 검색 : account:{address} AND type:ARC1
+                      <br> - 보유량이 0 보다 큰 것만 조회 : balance_float:>0"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (balance_float:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: balance_float:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of tokenBalance
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TokenBalanceRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /nftInventory:
-    get:
-      tags:
-        - tokenNftApi
-      summary: nftInventory info
-      description: nftInventoryNFT info
-      parameters:
-        - name: q
-          description:  "1. 해당NFT 주소 - address:{address}
-            <br>2. NFT 검색시 - address:{address} AND (token_id:*{search}* OR account:*{search}*)"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: sort
-          description: sort (blockno:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: blockno:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of nftInventory
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NftInventoryRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /nftInventory:
+        get:
+            tags:
+                - tokenNftApi
+            summary: nftInventory info
+            description: nftInventoryNFT info
+            parameters:
+                - name: q
+                  description: "1. 해당NFT 주소 - address:{address}
+                      <br>2. NFT 검색시 - address:{address} AND (token_id:*{search}* OR account:*{search}*)"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (blockno:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: blockno:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of nftInventory
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/NftInventoryRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /nftGroupCountInventory:
-    get:
-      tags:
-        - tokenNftApi
-      summary: nftGroupCountInventory info
-      description: nftGroupCountInventory info
-      parameters:
-        - name: q
-          description:  "Account 에서 검색 - account:{wallet-address}"
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 20
-      responses:
-        200:
-          description: An array of nftGroupCountInventory
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NftGroupCountInventoryRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /nftGroupCountInventory:
+        get:
+            tags:
+                - tokenNftApi
+            summary: nftGroupCountInventory info
+            description: nftGroupCountInventory info
+            parameters:
+                - name: q
+                  description: "Account 에서 검색 - account:{wallet-address}"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of nftGroupCountInventory
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/NftGroupCountInventoryRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  ## othersApi
-  # ex) https://api2-testnet.aergoscan.io/testnet/v2/existedTxTokenList?q=(from%3AAmMdeU6Qnk4GDAWSyBx8USFNZxwk4vMtJU8mVzMxuCfb9516ne5v OR to:AmMdeU6Qnk4GDAWSyBx8USFNZxwk4vMtJU8mVzMxuCfb9516ne5v)
-  /existedTxTokenList:
-    get:
-      tags:
-        - othersApi
-      summary: existedTxTokenList info
-      description: existedTxTokenList info
-      parameters:
-        - name: q
-          description: "token 조회시  -> (from:{wallet-address}+OR+to:{wallet-address})+AND+token_id:<0
-            <br> nft 에서 조회시    -> (from:{wallet-address}+OR+to:{wallet-address})+AND+token_id:>0"
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: An array of existedTxTokenList
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ExistedTxTokenListRes"
-        default:
-          description: Unexpected error
-          content: { }
+    ## othersApi
+    # ex) https://api2-testnet.aergoscan.io/testnet/v2/existedTxTokenList?q=(from%3AAmMdeU6Qnk4GDAWSyBx8USFNZxwk4vMtJU8mVzMxuCfb9516ne5v OR to:AmMdeU6Qnk4GDAWSyBx8USFNZxwk4vMtJU8mVzMxuCfb9516ne5v)
+    /existedTxTokenList:
+        get:
+            tags:
+                - othersApi
+            summary: existedTxTokenList info
+            description: existedTxTokenList info
+            parameters:
+                - name: q
+                  description:
+                      "token 조회시  -> (from:{wallet-address}+OR+to:{wallet-address})+AND+token_id:<0
+                      <br> nft 에서 조회시    -> (from:{wallet-address}+OR+to:{wallet-address})+AND+token_id:>0"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: An array of existedTxTokenList
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ExistedTxTokenListRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /search:
-    get:
-      tags:
-        - othersApi
-      summary: search info
-      description: search info
-      parameters:
-        - name: q
-          description: "검색하려는 hash 값
-            <br>1. tx 일때 {tx-hash}
-            <br>2. block hash 일때 {block-hash}"
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: An array of search
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SearchRes"
-        default:
-          description: Unexpected error
-          content: { }
+    /search:
+        get:
+            tags:
+                - othersApi
+            summary: search info
+            description: search info
+            parameters:
+                - name: q
+                  description: "검색하려는 hash 값
+                      <br>1. tx 일때 {tx-hash}
+                      <br>2. block hash 일때 {block-hash}"
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: An array of search
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SearchRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /names:
-    get:
-      tags:
-        - othersApi
-      summary: names list
-      description: names list
-      parameters:
-        - name: q
-          description: name ('mysimplename')
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: sort
-          description: sort (blockno:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: blockno:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type : string
-            default: 20
-      responses:
-        200:
-          description: An array of names
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NamesRes"
-        default:
-          description: Unexpected error
-          content: {}
+    /names:
+        get:
+            tags:
+                - othersApi
+            summary: names list
+            description: names list
+            parameters:
+                - name: q
+                  description: name ('mysimplename')
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: sort
+                  description: sort (blockno:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: blockno:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of names
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/NamesRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /accountsBalance:
-    get:
-      tags:
-        - othersApi
-      summary: accountsBalance
-      description: accountsBalance
-      parameters:
-        - name: sort
-          description: sort (balance_float:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: balance_float:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type : string
-            default: 20
-      responses:
-        200:
-          description: An array of accountsBalance
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountsBalanceRes"
-        default:
-          description: Unexpected error
-          content: {}
+    /accountsBalance:
+        get:
+            tags:
+                - othersApi
+            summary: accountsBalance
+            description: accountsBalance
+            parameters:
+                - name: sort
+                  description: sort (balance_float:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: balance_float:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of accountsBalance
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AccountsBalanceRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /accounts:
-    get:
-      tags:
-        - othersApi
-      summary: accounts
-      description: accounts
-      parameters:
-        - name: sort
-          description: sort (max_blockno:desc)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: max_blockno:desc
-        - name: from
-          description: from (0)
-          in: query
-          required: true
-          schema:
-            type: string
-            default: 0
-        - name: size
-          description: to (20)
-          in: query
-          required: true
-          schema:
-            type : string
-            default: 20
-      responses:
-        200:
-          description: An array of accounts
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AccountsRes"
-        default:
-          description: Unexpected error
-          content: {}
+    /accounts:
+        get:
+            tags:
+                - othersApi
+            summary: accounts
+            description: accounts
+            parameters:
+                - name: sort
+                  description: sort (max_blockno:desc)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: max_blockno:desc
+                - name: from
+                  description: from (0)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 0
+                - name: size
+                  description: to (20)
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      default: 20
+            responses:
+                200:
+                    description: An array of accounts
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AccountsRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
-  /tokensPrice:
-    get:
-      tags:
-        - othersApi
-      summary: tokens price
-      description: tokens price
-      responses:
-        200:
-          description: An array of tokens price
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/TokensPriceRes"
-        default:
-          description: Unexpected error
-          content: { }
-
+    /tokensPrice:
+        get:
+            tags:
+                - othersApi
+            summary: tokens price
+            description: tokens price
+            responses:
+                200:
+                    description: An array of tokens price
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/TokensPriceRes"
+                default:
+                    description: Unexpected error
+                    content: {}
 
 ############################################################################
 components:
-  schemas:
-    # response
-    ## main
-    ChainInfoRes:
-      type: object
-      properties:
-        hash:
-          name: Chain Information
-          description: chain info
-          type: string
+    schemas:
+        # response
+        ## main
+        ChainInfoRes:
+            type: object
+            properties:
+                hash:
+                    name: Chain Information
+                    description: chain info
+                    type: string
 
-    MainBlockInfoRes:
-      type: object
-      properties:
-        txList:
-          name: main block info
-          description: main block info
-          type: array
-          items:
-            $ref: "#/components/schemas/MainBlockInfo"
+        MainBlockInfoRes:
+            type: object
+            properties:
+                txList:
+                    name: main block info
+                    description: main block info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/MainBlockInfo"
 
-    RecentTransactionsRes:
-      type: object
-      properties:
-        txList:
-          name: 최근 트랜잭션 리스트
-          description: 최근 트랜잭션 리스트
-          type: array
-          items:
-            $ref: "#/components/schemas/RecentTransactions"
+        RecentTransactionsRes:
+            type: object
+            properties:
+                txList:
+                    name: 최근 트랜잭션 리스트
+                    description: 최근 트랜잭션 리스트
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/RecentTransactions"
 
-    TxPerDayRes:
-      type: object
-      properties:
-        txPerDay:
-          name: tx 일 기준 통계
-          description: tx 일 기준 통계
-          type: array
-          items:
-            $ref: "#/components/schemas/TxPerDay"
+        TxPerDayRes:
+            type: object
+            properties:
+                txPerDay:
+                    name: tx 일 기준 통계
+                    description: tx 일 기준 통계
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/TxPerDay"
 
-    ## blocksTransaction
-    BlocksRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/Blocks"
+        ## blocksTransaction
+        BlocksRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Blocks"
 
-    TransactionsRes:
-      type: object
-      properties:
-        total:
-          name: tx count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/Transactoins"
+        TransactionsRes:
+            type: object
+            properties:
+                total:
+                    name: tx count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Transactoins"
 
-    ContractTxRes:
-      type: object
-      properties:
-        total:
-          name: tx count
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/ContractTx"
+        ContractTxRes:
+            type: object
+            properties:
+                total:
+                    name: tx count
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ContractTx"
 
-    ## TokenNft
-    TokenNftApiRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/TokenNftList"
+        ## TokenNft
+        TokenNftApiRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/TokenNftList"
 
+        TokenNftTransfersRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/TokenNftTransfer"
+        TokenHolderRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/TokenHolder"
 
-    TokenNftTransfersRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/TokenNftTransfer"
-    TokenHolderRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/TokenHolder"
+        TokenBalanceRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/TokenHolder"
 
+        NftInventoryRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/NftInventory"
 
-    TokenBalanceRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/TokenHolder"
+        NftGroupCountInventoryRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: string
+                size:
+                    name: size
+                    type: string
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/NftGroupCountInventory"
 
+        ExistedTxTokenListRes:
+            type: object
+            properties:
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ExistedTxTokenList"
 
-    NftInventoryRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/NftInventory"
+        SearchRes:
+            type: object
+            properties:
+                blocks:
+                    name: blocks
+                    description: meta blocks
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/SearchBlocks"
+                transactions:
+                    name: transactions
+                    description: meta transactions
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/SearchTransactions"
 
-    NftGroupCountInventoryRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: string
-        size:
-          name: size
-          type: string
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/NftGroupCountInventory"
+        NamesRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Names"
 
-    ExistedTxTokenListRes:
-      type: object
-      properties:
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/ExistedTxTokenList"
+        AccountsBalanceRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                limitPageCount:
+                    name: limit Page Count
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/AccountsBalance"
 
-    SearchRes:
-      type: object
-      properties:
-        blocks:
-          name: blocks
-          description: meta blocks
-          type: array
-          items:
-            $ref: "#/components/schemas/SearchBlocks"
-        transactions:
-          name: transactions
-          description: meta transactions
-          type: array
-          items:
-            $ref: "#/components/schemas/SearchTransactions"
+        AccountsRes:
+            type: object
+            properties:
+                total:
+                    name: block height
+                    type: integer
+                from:
+                    name: from
+                    type: integer
+                size:
+                    name: size
+                    type: integer
+                hits:
+                    name: hits
+                    description: meta info
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Accounts"
 
-    NamesRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/Names"
+        TokensPriceRes:
+            type: object
+            properties:
+                name:
+                    name: token name
+                    type: string
+                contract:
+                    name: contract address
+                    type: string
+                price:
+                    $ref: "#/components/schemas/meta_price"
 
-    AccountsBalanceRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        limitPageCount:
-          name: limit Page Count
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/AccountsBalance"
+        ############################################################################
+        # response sub1_compenects
+        MainBlockInfo:
+            type: object
+            properties:
+                blockCount:
+                    type: integer
+                    description: latest block height
+                txTotal:
+                    type: integer
+                    description: tx total count
+                maxTps:
+                    $ref: "#/components/schemas/meta_max"
+                maxTpm:
+                    $ref: "#/components/schemas/meta_max"
 
-    AccountsRes:
-      type: object
-      properties:
-        total:
-          name: block height
-          type: integer
-        from:
-          name: from
-          type: integer
-        size:
-          name: size
-          type: integer
-        hits:
-          name: hits
-          description: meta info
-          type: array
-          items:
-            $ref: "#/components/schemas/Accounts"
+        RecentTransactions:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                meta:
+                    $ref: "#/components/schemas/meta_tx_list"
 
-    TokensPriceRes:
-      type: object
-      properties:
-        name:
-          name: token name
-          type: string
-        contract:
-          name: contract address
-          type: string
-        price:
-          $ref: "#/components/schemas/meta_price"
+        TxPerDay:
+            type: object
+            properties:
+                key_as_string:
+                    type: string
+                    description: key as string
+                key:
+                    type: integer
+                    description: create time
+                doc_count:
+                    type: integer
+                    description: doc count
+                max_txs:
+                    $ref: "#/components/schemas/max_txs"
+                sum_txs:
+                    $ref: "#/components/schemas/sum_txs"
 
+        Blocks:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                max_txs:
+                    $ref: "#/components/schemas/blocks_meta"
 
-    ############################################################################
-    # response sub1_compenects
-    MainBlockInfo:
-      type: object
-      properties:
-        blockCount:
-          type: integer
-          description: latest block height
-        txTotal:
-          type: integer
-          description: tx total count
-        maxTps:
-          $ref: "#/components/schemas/meta_max"
-        maxTpm:
-          $ref: "#/components/schemas/meta_max"
+        Transactoins:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                max_txs:
+                    $ref: "#/components/schemas/transaction_meta"
 
-    RecentTransactions:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        meta:
-          $ref: "#/components/schemas/meta_tx_list"
+        ContractTx:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                meta:
+                    $ref: "#/components/schemas/ContractTx_meta"
 
-    TxPerDay:
-      type: object
-      properties:
-        key_as_string:
-          type: string
-          description: key as string
-        key:
-          type: integer
-          description: create time
-        doc_count:
-          type: integer
-          description: doc count
+        TokenNftList:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                meta:
+                    $ref: "#/components/schemas/meta_token_nft_list"
+
+        TokenNftTransfer:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                meta:
+                    $ref: "#/components/schemas/meta_token_nft_transfer"
+                token:
+                    $ref: "#/components/schemas/meta_token_nft_list"
+
+        TokenHolder:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                meta:
+                    $ref: "#/components/schemas/meta_token_holder"
+                token:
+                    $ref: "#/components/schemas/meta_token_nft_list"
+
+        NftInventory:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                meta:
+                    $ref: "#/components/schemas/meta_nft_inventory"
+                token:
+                    $ref: "#/components/schemas/meta_hash_token_nft_list"
+
+        NftGroupCountInventory:
+            type: object
+            properties:
+                address:
+                    type: string
+                amount:
+                    type: integer
+                token:
+                    $ref: "#/components/schemas/meta_hash_token_nft_list"
+
+        ExistedTxTokenList:
+            type: object
+            properties:
+                hash:
+                    type: string
+                meta:
+                    $ref: "#/components/schemas/meta_token_nft_list"
+
+        SearchBlocks:
+            type: object
+            properties:
+                hash:
+                    type: string
+                meta:
+                    $ref: "#/components/schemas/blocks_meta"
+
+        SearchTransactions:
+            type: object
+            properties:
+                hash:
+                    type: string
+                meta:
+                    $ref: "#/components/schemas/transaction_meta"
+
+        Names:
+            type: object
+            properties:
+                name:
+                    type: string
+                address:
+                    type: string
+                blockno:
+                    type: integer
+                tx:
+                    type: string
+
+        AccountsBalance:
+            type: object
+            properties:
+                hash:
+                    type: string
+                tx:
+                    $ref: "#/components/schemas/account_balance"
+
+        Accounts:
+            type: object
+            properties:
+                key:
+                    type: string
+                doc_count:
+                    type: integer
+                max_blockno:
+                    type: integer
+                tx:
+                    $ref: "#/components/schemas/tx_hash"
+
+        ############################################################################
+        # response sub2_compenects
+        meta_max:
+            type: object
+            description: max tps/tpm
+            properties:
+                hash:
+                    type: string
+                    description: hash as string
+                meta:
+                    $ref: "#/components/schemas/max_tps_tpm"
+
+        meta_tx_list:
+            type: object
+            description: tx list
+            properties:
+                ts:
+                    type: integer
+                blockno:
+                    type: string
+                from:
+                    type: string
+                to:
+                    type: string
+                amount:
+                    type: string
+                amount_float:
+                    type: integer
+                type:
+                    type: string
+                category:
+                    type: string
+                method:
+                    type: integer
+
         max_txs:
-          $ref: "#/components/schemas/max_txs"
+            type: object
+            description: max txs
+            properties:
+                value:
+                    type: integer
+
         sum_txs:
-          $ref: "#/components/schemas/sum_txs"
+            type: object
+            description: sum txs
+            properties:
+                value:
+                    type: integer
 
-    Blocks:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        max_txs:
-          $ref: "#/components/schemas/blocks_meta"
+        blocks_meta:
+            type: object
+            description: blocks-meta data
+            properties:
+                ts:
+                    type: string
+                no:
+                    type: integer
+                txs:
+                    type: integer
+                size:
+                    type: integer
+                reward_account:
+                    type: string
+                reward_amount:
+                    type: string
 
-    Transactoins:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        max_txs:
-          $ref: "#/components/schemas/transaction_meta"
+        transaction_meta:
+            type: object
+            description: transaction_meta data
+            properties:
+                ts:
+                    type: string
+                blockno:
+                    type: integer
+                from:
+                    type: string
+                to:
+                    type: string
+                amount:
+                    type: string
+                amount_float:
+                    type: integer
+                type:
+                    type: string
+                category:
+                    type: string
+                method:
+                    type: string
+                token_transfers:
+                    type: integer
+                status:
+                    type: string
+                    enum:
+                        - SUCCESS
+                        - ERROR
 
-    ContractTx:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        meta:
-          $ref: "#/components/schemas/ContractTx_meta"
+        ContractTx_meta:
+            type: object
+            description: ContractTx_meta data
+            properties:
+                tx_id:
+                    type: string
+                creator:
+                    type: string
+                blockno:
+                    type: integer
+                ts:
+                    type: string
 
-    TokenNftList:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        meta:
-          $ref: "#/components/schemas/meta_token_nft_list"
+        meta_token_nft_list:
+            type: object
+            description: meta_token_nft_list data
+            properties:
+                tx_id:
+                    type: string
+                blockno:
+                    type: integer
+                type:
+                    type: string
+                name:
+                    type: string
+                symbol:
+                    type: string
+                token_transfers:
+                    type: integer
+                decimals:
+                    type: integer
+                supply:
+                    type: string
+                supply_float:
+                    type: integer
+                total_transfer:
+                    type: integer
+                url:
+                    type: string
+                image:
+                    type: string
 
-    TokenNftTransfer:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        meta:
-          $ref: "#/components/schemas/meta_token_nft_transfer"
-        token:
-          $ref: "#/components/schemas/meta_token_nft_list"
+        meta_token_nft_transfer:
+            type: object
+            description: meta_token_nft_transfer data
+            properties:
+                tx_id:
+                    type: string
+                ts:
+                    type: string
+                blockno:
+                    type: integer
+                address:
+                    type: string
+                from:
+                    type: string
+                to:
+                    type: string
+                sender:
+                    type: string
+                amount:
+                    type: string
+                amount_float:
+                    type: integer
+                token_id:
+                    type: string
 
-    TokenHolder:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        meta:
-          $ref: "#/components/schemas/meta_token_holder"
-        token:
-          $ref: "#/components/schemas/meta_token_nft_list"
+        meta_token_holder:
+            type: object
+            description: meta_token_holder data
+            properties:
+                amount:
+                    type: string
+                address:
+                    type: string
+                type:
+                    type: string
+                ts:
+                    type: string
+                balance:
+                    type: string
+                balance_float:
+                    type: integer
 
-    NftInventory:
-      type: object
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        meta:
-          $ref: "#/components/schemas/meta_nft_inventory"
-        token:
-          $ref: "#/components/schemas/meta_hash_token_nft_list"
+        meta_nft_inventory:
+            type: object
+            description: meta_nft_inventory data
+            properties:
+                address:
+                    type: string
+                token_id:
+                    type: string
+                account:
+                    type: string
+                blockno:
+                    type: integer
+                ts:
+                    type: string
+                token_uri:
+                    type: string
+                image_url:
+                    type: string
 
-    NftGroupCountInventory:
-      type: object
-      properties:
-        address:
-          type: string
-        amount:
-          type: integer
-        token:
-          $ref: "#/components/schemas/meta_hash_token_nft_list"
+        account_balance:
+            type: object
+            description: tx_hash data
+            properties:
+                blockno:
+                    type: integer
+                ts:
+                    type: string
+                balance:
+                    type: string
+                balance_float:
+                    type: integer
+                staking:
+                    type: string
+                staking_float:
+                    type: integer
 
-    ExistedTxTokenList:
-      type: object
-      properties:
-        hash:
-          type: string
-        meta:
-          $ref: "#/components/schemas/meta_token_nft_list"
+        tx_hash:
+            type: object
+            description: tx_hash data
+            properties:
+                hash:
+                    type: string
+                ts:
+                    type: string
 
-    SearchBlocks:
-      type: object
-      properties:
-        hash:
-          type: string
-        meta:
-          $ref: "#/components/schemas/blocks_meta"
+        meta_price:
+            type: object
+            description: meta token price data
+            properties:
+                usd:
+                    type: integer
+                krw:
+                    type: integer
 
-    SearchTransactions:
-      type: object
-      properties:
-        hash:
-          type: string
-        meta:
-          $ref: "#/components/schemas/transaction_meta"
+        # response sub3_compenects
+        max_tps_tpm:
+            type: object
+            description: max tps/tpm
+            properties:
+                ts:
+                    type: string
+                no:
+                    type: integer
+                txs:
+                    type: integer
+                size:
+                    type: integer
+                reward_account:
+                    type: string
+                reward_amount:
+                    type: string
 
-    Names:
-      type: object
-      properties:
-        name:
-          type: string
-        address:
-          type: string
-        blockno:
-          type: integer
-        tx:
-          type: string
+        meta_hash_token_nft_list:
+            type: object
+            description: meta_hash_token_nft_list
+            properties:
+                hash:
+                    type: string
+                meta:
+                    $ref: "#/components/schemas/meta_token_nft_list"
 
-    AccountsBalance:
-      type: object
-      properties:
-        hash:
-          type: string
-        tx:
-          $ref: "#/components/schemas/account_balance"
-
-    Accounts:
-      type: object
-      properties:
-        key:
-          type: string
-        doc_count:
-          type: integer
-        max_blockno:
-          type: integer
-        tx:
-          $ref: "#/components/schemas/tx_hash"
-
-
-    ############################################################################
-    # response sub2_compenects
-    meta_max:
-      type: object
-      description: max tps/tpm
-      properties:
-        hash:
-          type: string
-          description: hash as string
-        meta:
-          $ref: "#/components/schemas/max_tps_tpm"
-
-    meta_tx_list:
-      type: object
-      description: tx list
-      properties:
-        ts:
-          type: integer
-        blockno:
-          type: string
-        from:
-          type: string
-        to:
-          type: string
-        amount:
-          type: string
-        amount_float:
-          type: integer
-        type:
-          type: string
-        category:
-          type: string
-        method:
-          type: integer
-
-    max_txs:
-      type: object
-      description: max txs
-      properties:
-        value:
-          type: integer
-
-    sum_txs:
-      type: object
-      description: sum txs
-      properties:
-        value:
-          type: integer
-
-    blocks_meta:
-      type: object
-      description: blocks-meta data
-      properties:
-        ts:
-          type: string
-        no:
-          type: integer
-        txs:
-          type: integer
-        size:
-          type: integer
-        reward_account:
-          type: string
-        reward_amount:
-          type: string
-
-    transaction_meta:
-      type: object
-      description: transaction_meta data
-      properties:
-        ts:
-          type: string
-        blockno:
-          type: integer
-        from:
-          type: string
-        to:
-          type: string
-        amount:
-          type: string
-        amount_float:
-          type: integer
-        type:
-          type: string
-        category:
-          type: string
-        method:
-          type: string
-        token_transfers:
-          type: integer
-        status:
-          type: string
-          enum:
-            - SUCCESS
-            - ERROR
-
-    ContractTx_meta:
-      type: object
-      description: ContractTx_meta data
-      properties:
-        tx_id:
-          type: string
-        creator:
-          type: string
-        blockno:
-          type: integer
-        ts:
-          type: string
-
-    meta_token_nft_list:
-      type: object
-      description: meta_token_nft_list data
-      properties:
-        tx_id:
-          type: string
-        blockno:
-          type: integer
-        type:
-          type: string
-        name:
-          type: string
-        symbol:
-          type: string
-        token_transfers:
-          type: integer
-        decimals:
-          type: integer
-        supply:
-          type: string
-        supply_float:
-          type: integer
-        total_transfer:
-          type: integer
-        url:
-          type: string
-        image:
-          type: string
-
-    meta_token_nft_transfer:
-      type: object
-      description: meta_token_nft_transfer data
-      properties:
-        tx_id:
-          type: string
-        ts:
-          type: string
-        blockno:
-          type: integer
-        address:
-          type: string
-        from:
-          type: string
-        to:
-          type: string
-        sender:
-          type: string
-        amount:
-          type: string
-        amount_float:
-          type: integer
-        token_id:
-          type: string
-
-    meta_token_holder:
-      type: object
-      description: meta_token_holder data
-      properties:
-        amount:
-          type: string
-        address:
-          type: string
-        type:
-          type: string
-        ts:
-          type: string
-        balance:
-          type: string
-        balance_float:
-          type: integer
-
-    meta_nft_inventory:
-      type: object
-      description: meta_nft_inventory data
-      properties:
-        address:
-          type: string
-        token_id:
-          type: string
-        account:
-          type: string
-        blockno:
-          type: integer
-        ts:
-          type: string
-        token_uri:
-          type: string
-        image_url:
-          type: string
-
-    account_balance:
-      type: object
-      description: tx_hash data
-      properties:
-        blockno:
-          type: integer
-        ts:
-          type: string
-        balance:
-          type: string
-        balance_float:
-          type: integer
-        staking:
-          type: string
-        staking_float:
-          type: integer
-
-    tx_hash:
-      type: object
-      description: tx_hash data
-      properties:
-        hash:
-          type: string
-        ts:
-          type: string
-
-    meta_price:
-      type: object
-      description: meta token price data
-      properties:
-        usd:
-          type: integer
-        krw:
-          type: integer
-
-
-    # response sub3_compenects
-    max_tps_tpm:
-      type: object
-      description: max tps/tpm
-      properties:
-        ts:
-          type: string
-        no:
-          type: integer
-        txs:
-          type: integer
-        size:
-          type: integer
-        reward_account:
-          type: string
-        reward_amount:
-          type: string
-
-    meta_hash_token_nft_list:
-      type: object
-      description: meta_hash_token_nft_list
-      properties:
-        hash:
-          type: string
-        meta:
-          $ref: "#/components/schemas/meta_token_nft_list"
-
-
-    ############################################################################
-    # error code
-    Error:
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        fields:
-          type: string
-        
+        ############################################################################
+        # error code
+        Error:
+            properties:
+                code:
+                    type: string
+                message:
+                    type: string
+                fields:
+                    type: string

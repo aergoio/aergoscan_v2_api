@@ -1,4 +1,5 @@
 ## DB Configuration
+
     DB schema:
         CREATE TABLE `token_list` (
             `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'idx',
@@ -24,4 +25,3 @@
         SCAN_DB_DATABASE=database
         SCAN_DB_USERNAME=user
         SCAN_DB_PASSWORD=password
-

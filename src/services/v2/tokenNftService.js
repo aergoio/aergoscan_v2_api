@@ -143,7 +143,7 @@ const tokenNftTransfers = async (req, res, next) => {
                 if (tokenList.token != null) {
                     var q = "_id:" + tokenList.token.meta.address;
                     const result = req.apiClient.quickSearchToken(q);
-                    if (result.length > 0) {
+                    if (result.length > 0 && result != "undefined") {
                         const tempToken = JSON.parse(result);
                         tokenList.token.meta.name = tempToken.name;
                         tokenList.token.meta.symbol = tempToken.symbol;
@@ -157,7 +157,6 @@ const tokenNftTransfers = async (req, res, next) => {
                 }
             }
         }
-
         return res.json(result);
     } catch (e) {
         console.log("tokenNftTransfers = " + e);
@@ -189,7 +188,7 @@ const tokenNftHolder = async (req, res, next) => {
                 if (tokenList.token != null) {
                     var q = "_id:" + tokenList.token.meta.address;
                     const result = req.apiClient.quickSearchToken(q);
-                    if (result.length > 0) {
+                    if (result.length > 0 && result != "undefined") {
                         const tempToken = JSON.parse(result);
                         tokenList.token.meta.name = tempToken.name;
                         tokenList.token.meta.symbol = tempToken.symbol;
@@ -232,7 +231,7 @@ const nftInventory = async (req, res, next) => {
                 if (tokenList.token != null) {
                     var q = "_id:" + tokenList.token.meta.address;
                     const result = req.apiClient.quickSearchToken(q);
-                    if (result.length > 0) {
+                    if (result.length > 0 && result != "undefined") {
                         const tempToken = JSON.parse(result);
                         tokenList.token.meta.name = tempToken.name;
                         tokenList.token.meta.symbol = tempToken.symbol;
@@ -285,7 +284,7 @@ const nftGroupCountInventory = async (req, res, next) => {
             if (tokenList.token != null) {
                 var q = "_id:" + tokenList.token.meta.address;
                 const result = req.apiClient.quickSearchToken(q);
-                if (result.length > 0) {
+                if (result.length > 0 && result != "undefined") {
                     const tempToken = JSON.parse(result);
                     tokenList.token.meta.name = tempToken.name;
                     tokenList.token.meta.symbol = tempToken.symbol;
@@ -345,7 +344,7 @@ const tokenNftBalance = async (req, res, next) => {
                 if (tokenList.token != null) {
                     var q = "_id:" + tokenList.token.meta.address;
                     const result = req.apiClient.quickSearchToken(q);
-                    if (result.length > 0) {
+                    if (result.length > 0 && result != "undefined") {
                         const tempToken = JSON.parse(result);
                         tokenList.token.meta.name = tempToken.name;
                         tokenList.token.meta.symbol = tempToken.symbol;

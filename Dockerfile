@@ -14,7 +14,7 @@ ENV HOST_API ${ARG_HOST_API}
 
 WORKDIR /aergoscan-api
 COPY package* ./
-RUN npm install --production
+RUN npm install
 COPY . .
 
 ENTRYPOINT SELECTED_NETWORK=${SELECTED_NETWORK} ES_URL=${ES_URL} HTTP_PORT=${HTTP_PORT} HOST_API=${HOST_API} node bin/server.js

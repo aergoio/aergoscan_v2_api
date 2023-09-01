@@ -1,23 +1,10 @@
 import * as Console from "console";
 
-const { sequelize } = require("../../models/index");
 import cfg from "../../config/config";
 import {
     addCachedTokenData,
-    tokenRegisteredCache,
-    nftRegisteredCache,
     getCachedToken,
 } from "../../caches/caches";
-
-sequelize
-    .sync({ force: false })
-    // .authenticate()
-    .then(() => {
-        console.log("DB Connected");
-    })
-    .catch((err) => {
-        console.error(err);
-    });
 
 const tokenVerified = async (req, res, next) => {
     console.log("tokens url : " + req.url);

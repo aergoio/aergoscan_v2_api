@@ -4,10 +4,6 @@
 const schedulerDataCache = new Map();
 const tokenCache = new Map();
 
-//-- Token/Nft Registered List
-const tokenRegisteredCache = new Map();
-const nftRegisteredCache = new Map();
-
 //-- Token Price
 const tokePriceRegisteredCache = new Map();
 
@@ -53,7 +49,5 @@ export {
     tokenCache,
     getCachedToken,
     addCachedTokenData,
-    tokenRegisteredCache,
-    nftRegisteredCache,
     tokePriceRegisteredCache,
 };

@@ -1,4 +1,3 @@
-import { nftRegisteredCache, tokenRegisteredCache } from "../../caches/caches";
 import cfg from "../../config/config";
 import { ApiClient } from "../../models/esDb";
 
@@ -44,24 +43,6 @@ const transactions = async (req, res, next) => {
             parseInt(req.query.from || 0),
             Math.min(1000, parseInt(req.query.size || 10))
         );
-
-        /*
-        console.log(JSON.stringify(result.hits));
-        //-- token get information (images/url)
-        for (let tokenList of result.hits) {
-            if (tokenRegisteredCache.has(tokenList.meta.address)) {
-                const tempToken = JSON.parse(tokenRegisteredCache.get(tokenList.meta.address));
-                tokenList.token.meta.name = tempToken.token_name;
-                tokenList.token.meta.symbol = tempToken.token_symbol;
-                tokenList.token.meta.url = tempToken.token_url;
-                tokenList.token.meta.image = tempToken.token_image;
-            } else {
-                tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                tokenList.token.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
-            }
-        }
-        */
-
         return res.json(result);
     } catch (e) {
         console.log("...e = " + e);

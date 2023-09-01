@@ -19,11 +19,10 @@ sequelize
         console.error(err);
     });
 
-
 const tokenVerified = async (req, res, next) => {
     console.log("tokens url : " + req.url);
 
-    req.query.q += `AND verified_status:verified`;
+    req.query.q += ` AND verified_status:verified`;
     const tokenVerifyList = await req.apiClient.quickSearchToken(
         req.query.q,
         req.query.sort,
@@ -57,104 +56,13 @@ const token = async (req, res, next) => {
                 chainInfoMainnet
         );
 
-        let regContractAddress;
-        //-- range : ALL (전체검색), REG(등록된 토큰만 검색)
-        if (
-            "REG" === req.query.range &&
-            chainInfoPublic == true &&
-            chainInfoMainnet == true
-        ) {
-            console.log("type REG");
-
-            //--  reg-token
-            let search = "";
-            if (req.query.search) {
-                search = req.query.search;
-            }
-
-            const query =
-                "select token_address, token_name, token_symbol, token_url, token_image from token_list where network =:q_network AND (token_name like :q_search OR token_symbol like :q_search) AND type = :q_type AND status=3 AND is_view= :q_is_view limit " +
-                req.query.size +
-                " offset " +
-                req.query.from;
-            regContractAddress = "_id:";
-
-            const [result, metadata] = await sequelize.query(query, {
-                replacements: {
-                    q_network: cfg.SCHEDULER_NETWORK,
-                    q_search: "%" + search + "%",
-                    q_type: "ARC1",
-                    q_is_view: "Y",
-                },
-            });
-
-            for (let i = 0; i < result.length; i++) {
-                if (i < result.length && i > 0) {
-                    regContractAddress += " OR _id:";
-                }
-                regContractAddress += result[i].token_address;
-                // console.log("..regContractAddress = " + regContractAddress);
-
-                // set to tokenRegisteredCache
-                // tokenRegisteredCache.set(result[i].token_address, JSON.stringify(result[i]));
-            }
-            if (result.length == 0) {
-                regContractAddress = "";
-            }
-        } else {
-            console.log("type ALL");
-            regContractAddress = req.query.q;
-        }
-
         //-- elastic Toekn List
-        // const tokenList = await req.apiClient.quickSearchToken(req.query.q, req.query.sort, parseInt(req.query.from || 0), Math.min(1000, parseInt(req.query.size || 10)));
         const tokenList = await req.apiClient.quickSearchToken(
-            regContractAddress,
+            req.query.q,
             req.query.sort,
             parseInt(req.query.from || 0),
             Math.min(1000, parseInt(req.query.size || 10))
         );
-
-        await Promise.all(
-            tokenList.hits.map(async (tokenList) => {
-                const query_q = "address:" + tokenList.hash;
-                const contract_info =
-                    await req.apiClient.quickSearchTokenTransfers(
-                        query_q,
-                        req.query.sort,
-                        parseInt(req.query.from || 0),
-                        Math.min(1000, parseInt(req.query.size || 10))
-                    );
-                tokenList.meta.total_transfer = contract_info.total;
-                // tokenList.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                // tokenList.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
-
-                //-- token get information (images/url)
-                // for (let tokenKey of tokenRegisteredCache.keys()) {
-                // console.log(tokenKey);
-                // }
-
-                const tmpTokenList = [];
-                tmpTokenList.push(tokenList);
-
-                for (let tokenAddress of tmpTokenList) {
-                    if (tokenRegisteredCache.has(tokenAddress.hash)) {
-                        const tempToken = JSON.parse(
-                            tokenRegisteredCache.get(tokenAddress.hash)
-                        );
-                        console.log(JSON.stringify(tempToken));
-                        tokenList.meta.name = tempToken.token_name;
-                        tokenList.meta.symbol = tempToken.token_symbol;
-                        tokenList.meta.url = tempToken.token_url;
-                        tokenList.meta.image = tempToken.token_image;
-                    } else {
-                        tokenList.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                        tokenList.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
-                    }
-                }
-            })
-        );
-
         return res.json(tokenList);
     } catch (e) {
         console.log(e);
@@ -191,99 +99,13 @@ const nft = async (req, res, next) => {
                 chainInfoMainnet
         );
 
-        let regContractAddress;
-        //-- range : ALL (전체검색), REG(등록된 토큰만 검색)
-        if (
-            "REG" === req.query.range &&
-            chainInfoPublic == true &&
-            chainInfoMainnet == true
-        ) {
-            //--  reg-token
-            let search = "";
-            if (req.query.search) {
-                search = req.query.search;
-            }
-
-            const query =
-                "select token_address, token_name, token_symbol, token_url, token_image from token_list where network =:q_network AND (token_name like :q_search OR token_symbol like :q_search) AND type = :q_type AND status=3 AND is_view= :q_is_view limit " +
-                req.query.size +
-                " offset " +
-                req.query.from;
-            regContractAddress = "_id:";
-
-            // const [result, metadata] = await sequelize.query(query, params);
-            const [result, metadata] = await sequelize.query(query, {
-                replacements: {
-                    q_network: cfg.SCHEDULER_NETWORK,
-                    q_search: "%" + search + "%",
-                    q_type: "ARC2",
-                    q_is_view: "Y",
-                },
-            });
-
-            for (let i = 0; i < result.length; i++) {
-                if (i < result.length && i > 0) {
-                    regContractAddress += " OR _id:";
-                }
-                regContractAddress += result[i].token_address;
-                // console.log("..regContractAddress = " + regContractAddress);
-
-                // set to tokenRegisteredCache
-                // tokenRegisteredCache.set(result[i].token_address, JSON.stringify(result[i]));
-            }
-            if (result.length == 0) {
-                regContractAddress = "";
-            }
-        } else {
-            regContractAddress = req.query.q;
-        }
-
         //-- elastic Toekn List
-        // const tokenList = await req.apiClient.quickSearchToken(req.query.q, req.query.sort, parseInt(req.query.from || 0), Math.min(1000, parseInt(req.query.size || 10)));
         const tokenList = await req.apiClient.quickSearchToken(
-            regContractAddress,
+            req.query.q,
             req.query.sort,
             parseInt(req.query.from || 0),
             Math.min(1000, parseInt(req.query.size || 10))
         );
-
-        await Promise.all(
-            tokenList.hits.map(async (tokenList) => {
-                const query_q = "address:" + tokenList.hash;
-                const contract_info =
-                    await req.apiClient.quickSearchTokenTransfers(
-                        query_q,
-                        req.query.sort,
-                        parseInt(req.query.from || 0),
-                        Math.min(1000, parseInt(req.query.size || 10))
-                    );
-                tokenList.meta.total_transfer = contract_info.total;
-
-                //-- token get information (images/url)
-                // for (let tokenKey of tokenRegisteredCache.keys()) {
-                // console.log(tokenKey);
-                // }
-
-                const tmpTokenList = [];
-                tmpTokenList.push(tokenList);
-
-                for (let tokenAddress of tmpTokenList) {
-                    if (nftRegisteredCache.has(tokenAddress.hash)) {
-                        const tempToken = JSON.parse(
-                            nftRegisteredCache.get(tokenAddress.hash)
-                        );
-                        tokenList.meta.name = tempToken.token_name;
-                        tokenList.meta.symbol = tempToken.token_symbol;
-                        tokenList.meta.url = tempToken.token_url;
-                        tokenList.meta.image = tempToken.token_image;
-                    } else {
-                        tokenList.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                        tokenList.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
-                    }
-                }
-            })
-        );
-
         return res.json(tokenList);
     } catch (e) {
         return res.json({ error: e });
@@ -318,30 +140,23 @@ const tokenNftTransfers = async (req, res, next) => {
             const tmpTokenList = [];
             tmpTokenList.push(result);
             for (let tokenList of result.hits) {
-                if (
-                    tokenRegisteredCache.has(tokenList.meta.address) ||
-                    nftRegisteredCache.has(tokenList.meta.address)
-                ) {
-                    let tempToken = JSON.parse(
-                        tokenRegisteredCache.get(tokenList.meta.address)
-                    );
-                    // console.log("tempToken = "+tempToken);
-                    if (tempToken.size == 0) {
-                        tempToken = JSON.parse(
-                            nftRegisteredCache.get(tokenList.meta.address)
-                        );
+                if (tokenList.token != null) {
+                    var q = "_id:" + tokenList.token.meta.address;
+                    const result = req.apiClient.quickSearchToken(q);
+                    if (result.length > 0 && result != "undefined") {
+                        const tempToken = JSON.parse(result);
+                        tokenList.token.meta.name = tempToken.name;
+                        tokenList.token.meta.symbol = tempToken.symbol;
+                        tokenList.token.meta.url = tempToken.homepage_url;
+                        tokenList.token.meta.image = tempToken.image_url;
+                    } else {
+                        tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
+                        tokenList.token.meta.image =
+                            cfg.UNREGISTERED_TOKEN_IMAGE;
                     }
-                    tokenList.token.meta.name = tempToken.token_name;
-                    tokenList.token.meta.symbol = tempToken.token_symbol;
-                    tokenList.token.meta.url = tempToken.token_url;
-                    tokenList.token.meta.image = tempToken.token_image;
-                } else {
-                    tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                    tokenList.token.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
                 }
             }
         }
-
         return res.json(result);
     } catch (e) {
         console.log("tokenNftTransfers = " + e);
@@ -370,17 +185,20 @@ const tokenNftHolder = async (req, res, next) => {
 
             //-- token get information (images/url)
             for (let tokenList of result.hits) {
-                if (tokenRegisteredCache.has(tokenList.meta.address)) {
-                    const tempToken = JSON.parse(
-                        tokenRegisteredCache.get(tokenList.meta.address)
-                    );
-                    tokenList.token.meta.name = tempToken.token_name;
-                    tokenList.token.meta.symbol = tempToken.token_symbol;
-                    tokenList.token.meta.url = tempToken.token_url;
-                    tokenList.token.meta.image = tempToken.token_image;
-                } else {
-                    tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                    tokenList.token.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
+                if (tokenList.token != null) {
+                    var q = "_id:" + tokenList.token.meta.address;
+                    const result = req.apiClient.quickSearchToken(q);
+                    if (result.length > 0 && result != "undefined") {
+                        const tempToken = JSON.parse(result);
+                        tokenList.token.meta.name = tempToken.name;
+                        tokenList.token.meta.symbol = tempToken.symbol;
+                        tokenList.token.meta.url = tempToken.homepage_url;
+                        tokenList.token.meta.image = tempToken.image_url;
+                    } else {
+                        tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
+                        tokenList.token.meta.image =
+                            cfg.UNREGISTERED_TOKEN_IMAGE;
+                    }
                 }
             }
         }
@@ -410,17 +228,20 @@ const nftInventory = async (req, res, next) => {
 
             //-- token get information (images/url)
             for (let tokenList of result.hits) {
-                if (tokenRegisteredCache.has(tokenList.meta.address)) {
-                    const tempToken = JSON.parse(
-                        tokenRegisteredCache.get(tokenList.meta.address)
-                    );
-                    tokenList.token.meta.name = tempToken.token_name;
-                    tokenList.token.meta.symbol = tempToken.token_symbol;
-                    tokenList.token.meta.url = tempToken.token_url;
-                    tokenList.token.meta.image = tempToken.token_image;
-                } else {
-                    tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                    tokenList.token.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
+                if (tokenList.token != null) {
+                    var q = "_id:" + tokenList.token.meta.address;
+                    const result = req.apiClient.quickSearchToken(q);
+                    if (result.length > 0 && result != "undefined") {
+                        const tempToken = JSON.parse(result);
+                        tokenList.token.meta.name = tempToken.name;
+                        tokenList.token.meta.symbol = tempToken.symbol;
+                        tokenList.token.meta.url = tempToken.homepage_url;
+                        tokenList.token.meta.image = tempToken.image_url;
+                    } else {
+                        tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
+                        tokenList.token.meta.image =
+                            cfg.UNREGISTERED_TOKEN_IMAGE;
+                    }
                 }
             }
         }
@@ -460,17 +281,19 @@ const nftGroupCountInventory = async (req, res, next) => {
         //-- token get information (images/url)
         for (let tokenList of result.hits) {
             console.log("tokenList.address = " + tokenList.address);
-            if (nftRegisteredCache.has(tokenList.address)) {
-                const tempToken = JSON.parse(
-                    nftRegisteredCache.get(tokenList.address)
-                );
-                tokenList.token.meta.name = tempToken.token_name;
-                tokenList.token.meta.symbol = tempToken.token_symbol;
-                tokenList.token.meta.url = tempToken.token_url;
-                tokenList.token.meta.image = tempToken.token_image;
-            } else {
-                tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
-                tokenList.token.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
+            if (tokenList.token != null) {
+                var q = "_id:" + tokenList.token.meta.address;
+                const result = req.apiClient.quickSearchToken(q);
+                if (result.length > 0 && result != "undefined") {
+                    const tempToken = JSON.parse(result);
+                    tokenList.token.meta.name = tempToken.name;
+                    tokenList.token.meta.symbol = tempToken.symbol;
+                    tokenList.token.meta.url = tempToken.homepage_url;
+                    tokenList.token.meta.image = tempToken.image_url;
+                } else {
+                    tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
+                    tokenList.token.meta.image = cfg.UNREGISTERED_TOKEN_IMAGE;
+                }
             }
 
             //-- recently ts
@@ -519,15 +342,14 @@ const tokenNftBalance = async (req, res, next) => {
             //-- token get information (images/url)
             for (let tokenList of result.hits) {
                 if (tokenList.token != null) {
-                    // if(tokenList.token.length > 0) {
-                    if (tokenRegisteredCache.has(tokenList.meta.address)) {
-                        const tempToken = JSON.parse(
-                            tokenRegisteredCache.get(tokenList.meta.address)
-                        );
-                        tokenList.token.meta.name = tempToken.token_name;
-                        tokenList.token.meta.symbol = tempToken.token_symbol;
-                        tokenList.token.meta.url = tempToken.token_url;
-                        tokenList.token.meta.image = tempToken.token_image;
+                    var q = "_id:" + tokenList.token.meta.address;
+                    const result = req.apiClient.quickSearchToken(q);
+                    if (result.length > 0 && result != "undefined") {
+                        const tempToken = JSON.parse(result);
+                        tokenList.token.meta.name = tempToken.name;
+                        tokenList.token.meta.symbol = tempToken.symbol;
+                        tokenList.token.meta.url = tempToken.homepage_url;
+                        tokenList.token.meta.image = tempToken.image_url;
                     } else {
                         tokenList.token.meta.url = cfg.UNREGISTERED_TOKEN_URL;
                         tokenList.token.meta.image =

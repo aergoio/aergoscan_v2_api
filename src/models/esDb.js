@@ -196,8 +196,8 @@ export class ApiClient {
                     blockno: { order: "desc" },
                     tx_idx: { order: "asc" },
                     event_idx: { order: "asc" },
-                }
-            }
+                },
+            },
         };
 
         const response = await esDb.search(query);

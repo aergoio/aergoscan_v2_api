@@ -1,8 +1,6 @@
 import {
     addCachedTokenData,
-    nftRegisteredCache,
     schedulerDataCache,
-    tokenRegisteredCache,
 } from "../../caches/caches";
 import cfg from "../../config/config";
 import axios from "axios";
@@ -270,16 +268,13 @@ const existedTxTokenList = async (req, res, next) => {
         //-- 보유한/했던 토큰 리스트
         const ownerTxTokenList =
             await req.apiClient.quickSearchTokenTransfersOwnerList(req.query.q);
-        // console.log("-----"+JSON.stringify(ownerTxTokenList));
         if (ownerTxTokenList.hits && ownerTxTokenList.hits.length) {
-            // result.hits = await Promise.all(result.hits.map(hit => addCachedTokenData(req.apiClient, hit)))
             ownerTxTokenList.hits = await Promise.all(
                 ownerTxTokenList.hits.map((hit) =>
                     addCachedTokenData(req.apiClient, hit)
                 )
             );
         }
-        // console.log("-----"+ JSON.stringify(ownerTxTokenList));
 
         return res.json(ownerTxTokenList);
     } catch (e) {

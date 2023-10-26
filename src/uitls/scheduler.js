@@ -1,23 +1,10 @@
 import {
-    tokenRegisteredCache,
-    nftRegisteredCache,
     tokePriceRegisteredCache,
 } from "../caches/caches";
 
 const schedule = require("node-schedule");
 const axios = require("axios");
 import cfg from "../config/config";
-// import {QueryTypes} from "sequelize";
-
-const { sequelize, QueryTypes } = require("../models/index");
-sequelize
-    .sync({ force: false })
-    .then(() => {
-        console.log("DB Connected");
-    })
-    .catch((err) => {
-        console.error(err);
-    });
 
 // url path
 const CachedMainBlockInfo = "CachedMainBlockInfo";
@@ -54,8 +41,6 @@ const startup = async () => {
                 cfg.SCHEDULER_BASEURL + cfg.VERSION + "/" + CachedMainBlockInfo,
                 "mainBlockInfo_" + cfg.SCHEDULER_NETWORK
             );
-            CacheTokenRegistered();
-            CacheNftRegistered();
         });
     } catch (error) {
         console.error("scheduleJob[2] =" + error);
@@ -108,62 +93,6 @@ async function CacheApiCall(apiUrl, key) {
             });
     } catch (error) {
         console.error("scheduleJob CacheApiCall[2] =" + error);
-    }
-}
-
-async function CacheTokenRegistered() {
-    try {
-        const query =
-            'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC1" AND status=3 AND is_view="Y"';
-        // const query = 'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC1" AND is_view=?';
-        // const query = 'select token_address, token_name, token_symbol, token_url, token_image from token_list where type = "ARC1" AND is_view = (:is_view) ';
-        // console.log("query = "+query);
-        const params = ["N"];
-        let regContractAddress = "_id:";
-
-        /*
-        const [result , metadata] = await sequelize.query(
-            query,
-            {
-                replacement: { is_view : "Y" },
-                type: QueryTypes.SELECT
-            }
-
-        );
-        */
-        const [result, metadata] = await sequelize.query(query);
-        // console.log('....'+JSON.stringify(result));
-
-        tokenRegisteredCache.clear();
-
-        for (let i = 0; i < result.length; i++) {
-            tokenRegisteredCache.set(
-                result[i].token_address,
-                JSON.stringify(result[i])
-            );
-        }
-    } catch (error) {
-        console.error("scheduleJob CacheNftRegistered =" + error);
-    }
-}
-
-async function CacheNftRegistered() {
-    try {
-        const query =
-            'select token_address, token_name, token_symbol, token_url, token_image from token_list where type="ARC2" AND status=3 AND is_view="Y"';
-
-        const [result, metadata] = await sequelize.query(query);
-
-        nftRegisteredCache.clear();
-
-        for (let i = 0; i < result.length; i++) {
-            nftRegisteredCache.set(
-                result[i].token_address,
-                JSON.stringify(result[i])
-            );
-        }
-    } catch (error) {
-        console.error("scheduleJob CacheNftRegistered =" + error);
     }
 }
 

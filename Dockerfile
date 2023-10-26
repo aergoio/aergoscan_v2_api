@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:14-alpine
 LABEL email="cwlim@blocko.io"
 LABEL description="aergoscan 2.0 api"
 

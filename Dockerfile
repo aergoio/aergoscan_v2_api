@@ -4,6 +4,7 @@ ENTRYPOINT node bin/server.js
 EXPOSE ${HTTP_PORT}
 
 WORKDIR /aergoscan-api
+RUN apk add python3>3.10.13 g++ make
 
 COPY package* ./
 RUN npm install

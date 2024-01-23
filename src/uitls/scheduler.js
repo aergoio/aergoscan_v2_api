@@ -1,7 +1,3 @@
-import {
-    tokePriceRegisteredCache,
-} from "../caches/caches";
-
 const schedule = require("node-schedule");
 const axios = require("axios");
 import cfg from "../config/config";
@@ -9,6 +5,7 @@ import cfg from "../config/config";
 // url path
 const CachedMainBlockInfo = "CachedMainBlockInfo";
 const CachedRecentTransactions = "CachedRecentTransactions";
+const peerInfo = "peerInfo";
 // const CachedTxHistory             = "CachedTxHistory";              // 프론트에서 사용 안함
 
 /**
@@ -44,6 +41,16 @@ const startup = async () => {
         });
     } catch (error) {
         console.error("scheduleJob[2] =" + error);
+    }
+
+    // peer info
+    try {
+        schedule.scheduleJob("0/5 * * * * *", function () {
+            console.log("Scheduling peerInfo for peerInfo");
+            AlertBlockSync();
+        });
+    } catch (error) {
+        console.error("scheduleJob[3] =" + error);
     }
 
     // token price
@@ -89,6 +96,51 @@ async function CacheApiCall(apiUrl, key) {
             .catch(function (error) {
                 console.error(
                     "scheduleJob CacheApiCall[1] : " + apiUrl + "=" + error
+                );
+            });
+    } catch (error) {
+        console.error("scheduleJob CacheApiCall[2] =" + error);
+    }
+}
+
+async function AlertBlockSync(){
+    try {
+        axios({
+            timeout: 4000,
+            method: "get",
+            url: cfg.SCHEDULER_BASEURL + cfg.VERSION + "/" + peerInfo,
+        })
+            .then(function (response) {
+                // get best block number
+                let bestBlockNumber = 0;
+                response.data.forEach((peer) => {
+                    if (bestBlockNumber < peer.bestblock.blockno) {
+                        bestBlockNumber = peer.bestblock.blockno;
+                    }
+                })
+                response.data.forEach((peer) => {
+                    console.log("role :", peer.address.role)
+                    if (peer.address.role == 1) {
+                        console.log("this is bp")
+                        if (bestBlockNumber - peer.bestblock.blockno > 1) {
+                            console.log("Alert Block Sync : " + peer.address.peerid)
+                            axios({
+                                timeout: 4000,
+                                method: "post",
+                                url: cfg.SCHEDULER_ALERT,
+                                data: {
+                                    peerID: peer.address.peerid,
+                                    bestHeight: bestBlockNumber,
+                                    currentHeight: peer.bestblock.blockno
+                                },
+                            })
+                        }
+                    }
+                })
+            })
+            .catch(function (error) {
+                console.error(
+                    "scheduleJob CacheApiCall[1] : " + "=" + error
                 );
             });
     } catch (error) {

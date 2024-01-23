@@ -67,7 +67,7 @@ const peerInfo = async (req, res, next) => {
     try {
         try {
             let peers = await aergoClientType.getPeers();
-            console.log(JSON.stringify(peers));
+            // console.log(JSON.stringify(peers));
             return res.json(peers);
         } catch (e) {
             console.log("connectState e = " + e);

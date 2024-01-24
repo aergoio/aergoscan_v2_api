@@ -2,6 +2,7 @@ const ENV_SELECTED_NETWORK = process.env.SELECTED_NETWORK;
 const ENV_ES_URL = process.env.ES_URL;
 const ENV_HTTP_PORT = process.env.HTTP_PORT;
 const ENV_HOST_API = process.env.HOST_API;
+const ALERT_URL = process.env.ALERT_URL;
 
 console.log(">>> process.env.SELECTED_NETWORK = " + ENV_SELECTED_NETWORK);
 console.log(">>> process.env.ES_URL           = " + ENV_ES_URL);
@@ -25,7 +26,7 @@ module.exports = {
     //-- Scheduler Config
     SCHEDULER_NETWORK: ENV_SELECTED_NETWORK,
     SCHEDULER_BASEURL: "http://127.0.0.1:" + ENV_HTTP_PORT + "/",
-    SCHEDULER_ALERT: "https://hooks.slack.com/triggers/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",
+    SCHEDULER_ALERT: ALERT_URL,
 
     // Registered Token Info (default info (image/url)
     UNREGISTERED_TOKEN_URL: "",

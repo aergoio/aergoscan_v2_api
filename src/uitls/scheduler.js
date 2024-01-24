@@ -43,14 +43,16 @@ const startup = async () => {
         console.error("scheduleJob[2] =" + error);
     }
 
-    // peer info
-    try {
-        schedule.scheduleJob("0/5 * * * * *", function () {
-            console.log("Scheduling peerInfo for peerInfo");
-            AlertBlockSync();
-        });
-    } catch (error) {
-        console.error("scheduleJob[3] =" + error);
+    // peer info for check syncing
+    if (cfg.SCHEDULER_ALERT) {
+        try {
+            schedule.scheduleJob("0/5 * * * *", function () {
+                console.log("Scheduling peerInfo for check syncing");
+                AlertBlockSync();
+            });
+        } catch (error) {
+            console.error("scheduleJob[3] =" + error);
+        }
     }
 
     // token price
@@ -119,22 +121,19 @@ async function AlertBlockSync(){
                     }
                 })
                 response.data.forEach((peer) => {
-                    console.log("role :", peer.address.role)
-                    if (peer.address.role == 1) {
-                        console.log("this is bp")
-                        if (bestBlockNumber - peer.bestblock.blockno > 1) {
-                            console.log("Alert Block Sync : " + peer.address.peerid)
-                            axios({
-                                timeout: 4000,
-                                method: "post",
-                                url: cfg.SCHEDULER_ALERT,
-                                data: {
-                                    peerID: peer.address.peerid,
-                                    bestHeight: bestBlockNumber,
-                                    currentHeight: peer.bestblock.blockno
-                                },
-                            })
-                        }
+                    if (peer.address.role == 1 && bestBlockNumber > peer.bestblock.blockno + 3600) {
+                        console.log("Alert Block Sync : " + peer.address.peerid)
+                        axios({
+                            timeout: 4000,
+                            method: "post",
+                            url: cfg.SCHEDULER_ALERT,
+                            data: {
+                                peerID: peer.address.peerid,
+                                difference: bestBlockNumber - peer.bestblock.blockno,
+                                bestHeight: bestBlockNumber,
+                                currentHeight: peer.bestblock.blockno
+                            },
+                        })
                     }
                 })
             })

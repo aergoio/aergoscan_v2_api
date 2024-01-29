@@ -46,7 +46,7 @@ const startup = async () => {
     // peer info for check syncing
     if (cfg.SCHEDULER_ALERT_URL) {
         try {
-            schedule.scheduleJob("0/5 * * * *", function () {
+            schedule.scheduleJob("0/1 * * * *", function () {
                 console.log("Scheduling peerInfo for check syncing");
                 AlertBlockSync();
             });
@@ -121,7 +121,7 @@ async function AlertBlockSync(){
                     }
                 })
                 response.data.forEach((peer) => {
-                    if (peer.address.role == 1 && bestBlockNumber > peer.bestblock.blockno + cfg.SCHEDULER_ALERT_BLOCKNO) {
+                    if (peer.address.role == 1 && bestBlockNumber > peer.bestblock.blockno + Number(cfg.SCHEDULER_ALERT_BLOCKNO)) {
                         console.log("Alert Block Sync : " + peer.address.peerid)
                         axios({
                             timeout: 4000,

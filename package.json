@@ -12,8 +12,9 @@
   "author": "",
   "dependencies": {
     "@babel/register": "^7.17.7",
-    "@herajs/client": "^0.21.1",
-    "axios": "^0.26.1",
+    "@herajs/client": "^1.2.1",
+    "@herajs/common": "^1.2.1",
+    "axios": "^1.6.5",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "elasticsearch": "^16.7.3",

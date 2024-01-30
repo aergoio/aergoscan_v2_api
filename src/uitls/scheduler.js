@@ -47,13 +47,14 @@ const startup = async () => {
     if (cfg.SCHEDULER_ALERT_URL) {
         try {
             let intervalMin = 30;
-            if (typeof cfg.SCHEDULER_ALERT_INTERVAL_MINUTE === "number") {
-                if (cfg.SCHEDULER_ALERT_INTERVAL_MINUTE > 60) {
+            if (cfg.SCHEDULER_ALERT_INTERVAL_MINUTE) {
+                let intervalOverwrite = Number(cfg.SCHEDULER_ALERT_INTERVAL_MINUTE)
+                if (intervalOverwrite > 60) {
                     intervalMin = 60;
-                } else if (cfg.SCHEDULER_ALERT_INTERVAL_MINUTE < 5) {
+                } else if (intervalOverwrite < 5) {
                     intervalMin = 5;
                 } else {
-                    intervalMin = cfg.SCHEDULER_ALERT_INTERVAL_MINUTE;
+                    intervalMin = intervalOverwrite;
                 }
             }
 

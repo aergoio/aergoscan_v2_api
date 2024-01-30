@@ -46,8 +46,19 @@ const startup = async () => {
     // peer info for check syncing
     if (cfg.SCHEDULER_ALERT_URL) {
         try {
-            schedule.scheduleJob("0/1 * * * *", function () {
-                console.log("Scheduling peerInfo for check syncing");
+            let intervalMin = 30;
+            if (typeof cfg.SCHEDULER_ALERT_INTERVAL_MINUTE === "number") {
+                if (cfg.SCHEDULER_ALERT_INTERVAL_MINUTE > 60) {
+                    intervalMin = 60;
+                } else if (cfg.SCHEDULER_ALERT_INTERVAL_MINUTE < 5) {
+                    intervalMin = 5;
+                } else {
+                    intervalMin = cfg.SCHEDULER_ALERT_INTERVAL_MINUTE;
+                }
+            }
+
+            schedule.scheduleJob("0 */" + intervalMin + " * * * *", function () {
+                console.log('Scheduling CachedMainBlockInfo for mainBlockInfo : ' + new Date());
                 AlertBlockSync();
             });
         } catch (error) {

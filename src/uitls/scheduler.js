@@ -57,14 +57,14 @@ const startup = async () => {
                     intervalMin = intervalOverwrite;
                 }
             }
-            if (interval >= 60) {
+            if (intervalMin >= 60) {
                 let intervalHour = intervalMin / 60;
                 schedule.scheduleJob("0 0 */" + intervalHour + " * * *", function () {
                     console.log("Scheduling peerInfo for check syncing");
                     AlertBlockSync();
                 });
             } else {
-                schedule.scheduleJob("0 */" + interval + " * * * *", function () {
+                schedule.scheduleJob("0 */" + intervalMin + " * * * *", function () {
                     console.log("Scheduling peerInfo for check syncing");
                     AlertBlockSync();
                 });

@@ -49,19 +49,26 @@ const startup = async () => {
             let intervalMin = 30;
             if (cfg.SCHEDULER_ALERT_INTERVAL_MINUTE) {
                 let intervalOverwrite = Number(cfg.SCHEDULER_ALERT_INTERVAL_MINUTE)
-                if (intervalOverwrite > 60) {
-                    intervalMin = 60;
-                } else if (intervalOverwrite < 5) {
+                if (intervalOverwrite > 60*12) { // Max 12 hour
+                    intervalMin = 60*12;
+                } else if (intervalOverwrite < 5) { // Min 5 minute
                     intervalMin = 5;
                 } else {
                     intervalMin = intervalOverwrite;
                 }
             }
-
-            schedule.scheduleJob("0 */" + intervalMin + " * * * *", function () {
-                console.log('Scheduling CachedMainBlockInfo for mainBlockInfo : ' + new Date());
-                AlertBlockSync();
-            });
+            if (interval >= 60) {
+                intervalHour = intervalMin / 60;
+                schedule.scheduleJob("0 0 */" + intervalHour + " * * *", function () {
+                    console.log("Scheduling peerInfo for check syncing");
+                    AlertBlockSync();
+                });
+            } else {
+                schedule.scheduleJob("0 */" + interval + " * * *", function () {
+                    console.log("Scheduling peerInfo for check syncing");
+                    AlertBlockSync();
+                });
+            }
         } catch (error) {
             console.error("scheduleJob[3] =" + error);
         }

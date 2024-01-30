@@ -58,7 +58,7 @@ const startup = async () => {
                 }
             }
             if (interval >= 60) {
-                intervalHour = intervalMin / 60;
+                let intervalHour = intervalMin / 60;
                 schedule.scheduleJob("0 0 */" + intervalHour + " * * *", function () {
                     console.log("Scheduling peerInfo for check syncing");
                     AlertBlockSync();

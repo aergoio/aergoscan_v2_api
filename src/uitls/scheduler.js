@@ -64,7 +64,7 @@ const startup = async () => {
                     AlertBlockSync();
                 });
             } else {
-                schedule.scheduleJob("0 */" + interval + " * * *", function () {
+                schedule.scheduleJob("0 */" + interval + " * * * *", function () {
                     console.log("Scheduling peerInfo for check syncing");
                     AlertBlockSync();
                 });

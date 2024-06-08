@@ -43,21 +43,24 @@ const transactions = async (req, res, next) => {
             Math.min(1000, parseInt(req.query.size || 10)),
         );
 
-        if (result.hits.length > 0) {
-            // internal
-            const internalTx = result.hits.map(x => `_id:${x.hash}`);
-            const internalQ = `${internalTx.join(' OR ')}`;
-            const resultInternal = await req.apiClient.quickSearchInternalTransactions(internalQ, 'blockno', 0, internalQ.length);
+        try {
+            if (result.hits.length > 0) {
+                // internal
+                const internalTx = result.hits.map(x => `_id:${x.hash}`);
+                const internalQ = `${internalTx.join(' OR ')}`;
+                const resultInternal = await req.apiClient.quickSearchInternalTransactions(internalQ, 'blockno', 0, internalQ.length);
 
-            if (resultInternal.hits.length > 0) {
-                result.hits.map(x => {
-                    const internal = resultInternal.hits.find(i => i.hash === x.hash);
-                    if (internal) {
-                        x.internal = internal.meta;
-                    }
-                });
+                if (resultInternal.hits.length > 0) {
+                    result.hits.map(x => {
+                        const internal = resultInternal.hits.find(i => i.hash === x.hash);
+                        if (internal) {
+                            x.internal = internal.meta;
+                        }
+                    });
+                }
             }
-        }
+        } catch (e) {}
+
         /*
         console.log(JSON.stringify(result.hits));
         //-- token get information (images/url)

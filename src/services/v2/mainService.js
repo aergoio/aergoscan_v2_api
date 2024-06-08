@@ -1,4 +1,5 @@
 import { schedulerDataCache } from '../../caches/caches';
+import { heraGrpcProvider } from '../herajs';
 
 /**
  * txHistory
@@ -49,9 +50,26 @@ const CachedTxHistory = async (req, res, next) => {
     }
 };
 
+const peerInfo = async (req, res, next) => {
+    console.log('peerInfo url : ' + req.url);
+
+    let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK);
+    try {
+        try {
+            let peers = await aergoClientType.getPeers();
+            // console.log(JSON.stringify(peers));
+            return res.json(peers);
+        } catch (e) {
+            console.log('connectState e = ' + e);
+        }
+    } catch (e) {
+        return res.json({ error: e });
+    }
+};
+
 /**
  * txTotal, maxTps, maxTpm
- *  - BP number, Latest Bock - hera 에서 가져옴
+ *  - BP number, Latest Block - hera 에서 가져옴
  */
 const mainBlockInfo = async (req, res, next) => {
     // console.log('mainBlockInfo!!');
@@ -204,4 +222,4 @@ const CachedRecentTransactions = async (req, res, next) => {
     }
 };
 
-export { txHistory, CachedTxHistory, mainBlockInfo, CachedMainBlockInfo, RecentTransactions, CachedRecentTransactions };
+export { peerInfo, txHistory, CachedTxHistory, mainBlockInfo, CachedMainBlockInfo, RecentTransactions, CachedRecentTransactions };

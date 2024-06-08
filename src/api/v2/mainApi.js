@@ -1,6 +1,14 @@
 import express from 'express';
 
-import { txHistory, CachedTxHistory, mainBlockInfo, CachedMainBlockInfo, RecentTransactions, CachedRecentTransactions } from '../../services/v2/mainService';
+import {
+    peerInfo,
+    txHistory,
+    CachedTxHistory,
+    mainBlockInfo,
+    CachedMainBlockInfo,
+    RecentTransactions,
+    CachedRecentTransactions,
+} from '../../services/v2/mainService';
 
 const apiV2 = express.Router({ mergeParams: true });
 
@@ -16,7 +24,8 @@ const apiV2 = express.Router({ mergeParams: true });
  *   - https
  *   - http
  */
-// apiV2.route('/txHistory').get(txHistory);
+apiV2.route('/peerInfo').get(peerInfo);
+apiV2.route('/txHistory').get(txHistory);
 apiV2.route('/CachedTxHistory').get(CachedTxHistory);
 apiV2.route('/mainBlockInfo').get(mainBlockInfo);
 apiV2.route('/CachedMainBlockInfo').get(CachedMainBlockInfo);

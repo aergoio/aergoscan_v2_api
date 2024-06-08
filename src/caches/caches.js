@@ -4,13 +4,8 @@
 const schedulerDataCache = new Map();
 const tokenCache = new Map();
 
-//-- Token/Nft Registered List
-const tokenRegisteredCache = new Map();
-const nftRegisteredCache = new Map();
-
 //-- Token Price
 const tokePriceRegisteredCache = new Map();
-
 
 async function fetchToken(apiClient, address) {
     const result = await apiClient.quickSearchToken(`_id:${address}`);
@@ -49,4 +44,10 @@ function getCachedTokensPrice(apiClient, address) {
     return fetch;
 }
 
-export { schedulerDataCache, tokenCache, getCachedToken, addCachedTokenData, tokenRegisteredCache, nftRegisteredCache, tokePriceRegisteredCache  }
+export {
+    schedulerDataCache,
+    tokenCache,
+    getCachedToken,
+    addCachedTokenData,
+    tokePriceRegisteredCache,
+};

@@ -1,5 +1,2 @@
-require('@babel/register');
-require('../src/run-server.js');
-
-
-
+require("@babel/register");
+require("../src/run-server.js");

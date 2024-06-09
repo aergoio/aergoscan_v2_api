@@ -76,6 +76,28 @@ const internals = async (req, res, next) => {
     var size = Math.min(1000, parseInt(req.query.size || 10));
 
     try {
+        const result = await req.apiClient.quickSearchInternal(req.query.q, req.query.sort, from, size);
+
+        return res.json(result);
+    } catch (e) {
+        console.log('...e = ' + e);
+        // return res.json({ error: e });
+        return res.json({
+            total: 0,
+            limitPageCount: 0,
+            from,
+            size,
+            hits: [],
+        });
+    }
+};
+
+const internaltransactions = async (req, res, next) => {
+    console.log('(' + requestIp.getClientIp(req) + ') internaltransactions url : ' + req.url);
+    var from = parseInt(req.query.from || 0);
+    var size = Math.min(1000, parseInt(req.query.size || 10));
+
+    try {
         const result = await req.apiClient.quickSearchInternalTransactions(req.query.q, req.query.sort, from, size);
 
         return res.json(result);
@@ -134,4 +156,4 @@ const event = async (req, res, next) => {
     }
 };
 
-export { blocks, transactions, internals, contractTx, event };
+export { blocks, transactions, internals, internaltransactions, contractTx, event };

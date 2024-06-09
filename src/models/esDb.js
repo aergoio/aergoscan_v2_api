@@ -50,6 +50,7 @@ export class ApiClient {
         this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
         this.NFT_INDEX = `${chainId}_nft`;
         this.TX_INTERNAL_INDEX = `${chainId}_tx_internal`;
+        this.INTERNAL_TX_INDEX = `${chainId}_internal_tx`;
     }
 
     async chainInfo(query) {
@@ -181,7 +182,7 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchInternalTransactions(q, sort = 'blockno', from = 0, size = 10) {
+    async quickSearchInternal(q, sort = 'blockno', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.TX_INTERNAL_INDEX,
@@ -194,6 +195,30 @@ export class ApiClient {
 
         // total-count and limit page count
         const totalCnt = await this.getTxInternalCount(q);
+        let limitPageCount = totalCnt;
+        if (totalCnt > 10000) limitPageCount = 1000 * size;
+        const resp = {
+            total: totalCnt,
+            limitPageCount: limitPageCount,
+            from,
+            size,
+            hits: response.hits.hits.map(item => ({ hash: item._id, meta: item._source })),
+        };
+        return resp;
+    }
+
+    async quickSearchInternalTransactions(q, sort = 'blockno', from = 0, size = 10) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.INTERNAL_TX_INDEX,
+            q,
+            sort,
+            from,
+            size,
+        };
+        const response = await esDb.search(query);
+
+        const totalCnt = await this.getInternalTxCount(q);
         let limitPageCount = totalCnt;
         if (totalCnt > 10000) limitPageCount = 1000 * size;
         const resp = {
@@ -480,6 +505,17 @@ export class ApiClient {
     async getTxInternalCount(q) {
         const args = {
             index: this.TX_INTERNAL_INDEX,
+        };
+        if (q) {
+            args.q = q;
+        }
+        const { count } = await esDb.count(args);
+        return count;
+    }
+
+    async getInternalTxCount(q) {
+        const args = {
+            index: this.INTERNAL_TX_INDEX,
         };
         if (q) {
             args.q = q;

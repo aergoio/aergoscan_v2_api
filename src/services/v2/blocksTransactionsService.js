@@ -72,19 +72,23 @@ const transactions = async (req, res, next) => {
  */
 const internals = async (req, res, next) => {
     console.log('(' + requestIp.getClientIp(req) + ') internals url : ' + req.url);
+    var from = parseInt(req.query.from || 0);
+    var size = Math.min(1000, parseInt(req.query.size || 10));
 
     try {
-        const result = await req.apiClient.quickSearchInternalTransactions(
-            req.query.q,
-            req.query.sort,
-            parseInt(req.query.from || 0),
-            Math.min(1000, parseInt(req.query.size || 10)),
-        );
+        const result = await req.apiClient.quickSearchInternalTransactions(req.query.q, req.query.sort, from, size);
 
         return res.json(result);
     } catch (e) {
         console.log('...e = ' + e);
-        return res.json({ error: e });
+        // return res.json({ error: e });
+        return res.json({
+            total: 0,
+            limitPageCount: 0,
+            from,
+            size,
+            hits: [],
+        });
     }
 };
 
@@ -104,6 +108,25 @@ const event = async (req, res, next) => {
     try {
         const result = await req.apiClient.quickSearchEvents(req.query.q, parseInt(req.query.from || 0), Math.min(1000, parseInt(req.query.size || 10)));
         // console.log(JSON.stringify(result.hits));
+
+        try {
+            if (result.hits.length > 0) {
+                // internal
+                const internalTx = result.hits.map(x => `_id:${x.tx_id}`);
+                const internalQ = `${internalTx.join(' OR ')}`;
+                const resultInternal = await req.apiClient.quickSearchInternalTransactions(internalQ, 'blockno', 0, internalQ.length);
+
+                if (resultInternal.hits.length > 0) {
+                    result.hits.map(x => {
+                        const internal = resultInternal.hits.find(i => i.hash === x.tx_id);
+                        if (internal) {
+                            x.internal = internal.meta;
+                        }
+                    });
+                }
+            }
+        } catch (e) {}
+
         return res.json(result);
     } catch (e) {
         console.log('...e = ' + e);

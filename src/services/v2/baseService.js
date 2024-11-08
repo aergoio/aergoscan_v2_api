@@ -3,45 +3,45 @@
  * Aergoscan V2 API
  *
  **************************************************************************************************** */
-import chaininfos from "../../../chaininfo.json";
-import { Amount } from "@herajs/client";
-import cfg from "../../config/config";
+import chaininfos from '../../../chaininfo.json';
+import { Amount } from '@herajs/client';
+import cfg from '../../config/config';
 
 const apiRoot = async (req, res, next) => {
     const publicEndpoints = [
-        "chainInfo",
-        "mainBlockInfo",
-        "recentTransactions",
-        "txHistory",
-        "Blocks",
-        "firstBlock",
-        "bestBlock",
-        "Transactions",
-        "contractTx",
-        "event",
-        "existedTxTokenList",
-        "search",
-        "names",
-        "accountsBalance",
-        "accounts",
-        "tokensPrice",
-        "token",
-        "tokenVerified",
-        "tokenTransfers",
-        "tokenHolder",
-        "nft",
-        "nftTransfers",
-        "nftHolder",
-        "tokenBalance",
-        "nftInventory",
-        "nftGroupCountInventory",
+        'chainInfo',
+        'mainBlockInfo',
+        'recentTransactions',
+        'txHistory',
+        'Blocks',
+        'firstBlock',
+        'bestBlock',
+        'Transactions',
+        'contractTx',
+        'event',
+        'existedTxTokenList',
+        'search',
+        'names',
+        'accountsBalance',
+        'accounts',
+        'tokensPrice',
+        'token',
+        'tokenVerified',
+        'tokenTransfers',
+        'tokenHolder',
+        'nft',
+        'nftTransfers',
+        'nftHolder',
+        'tokenBalance',
+        'nftInventory',
+        'nftGroupCountInventory',
+        'internalOperations',
+        'contractCall',
     ];
     return res.json({
         id: process.env.SELECTED_NETWORK,
         msg: `Aergoscan API for chain ${process.env.SELECTED_NETWORK}.`,
-        resources: publicEndpoints.map(
-            (resource) => `${cfg.HOST}/${cfg.VERSION}/${resource}/`
-        ),
+        resources: publicEndpoints.map(resource => `${cfg.HOST}/${cfg.VERSION}/${resource}/`),
     });
 };
 
@@ -57,14 +57,13 @@ const chainInfo = async (req, res, next) => {
 */
 // v2.0
 const chainInfo = async (req, res, next) => {
-    console.log("chainInfo");
+    console.log('chainInfo');
     try {
         // chain info
         let result = await req.apiClient.chainInfo(req.query.q);
-
         return res.json(result);
     } catch (e) {
-        console.log("chaininfo e = " + e);
+        console.log('chaininfo e = ' + e);
         return res.json({ error: e });
     }
 };
@@ -72,11 +71,11 @@ const chainInfo = async (req, res, next) => {
 const maxTokens = async (req, res, next) => {
     const chaininfo = chaininfos[process.env.SELECTED_NETWORK];
     if (!chaininfo) {
-        return res.send("chaininfo not found");
+        return res.send('chaininfo not found');
     }
-    const unit = req.query.unit || "aer";
-    const amount = new Amount(chaininfo["MaxTokens"], "aer");
-    const [value] = amount.toUnit(unit).toString().split(" ");
+    const unit = req.query.unit || 'aer';
+    const amount = new Amount(chaininfo['MaxTokens'], 'aer');
+    const [value] = amount.toUnit(unit).toString().split(' ');
     return res.send(value);
 };
 
@@ -85,7 +84,7 @@ const maxTokens = async (req, res, next) => {
  */
 const bestBlock = async (req, res, next) => {
     // console.log('bestBlock = '+req.apiClient);
-    console.log("bestBlock!!");
+    console.log('bestBlock!!');
     try {
         return res.json(await req.apiClient.getBestBlock());
     } catch (e) {
@@ -98,7 +97,7 @@ const bestBlock = async (req, res, next) => {
  */
 const firstBlock = async (req, res, next) => {
     // console.log('bestBlock = '+req.apiClient);
-    console.log("firstBlock!!");
+    console.log('firstBlock!!');
     try {
         return res.json(await req.apiClient.getFirstBlock());
     } catch (e) {

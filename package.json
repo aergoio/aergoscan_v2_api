@@ -4,7 +4,7 @@
   "description": "Backend for aergoscan, mostly API for chain metadata in elasticsearch db",
   "main": "src/index.js",
   "scripts": {
-    "local": "SELECTED_NETWORK=local node bin/server.js",
+    "local": "SELECTED_NETWORK=local nodemon bin/server.js",
     "testnet": "SELECTED_NETWORK=testnet node bin/server.js",
     "mainnet": "SELECTED_NETWORK=mainnet node bin/server.js",
     "alpha": "SELECTED_NETWORK=alpha node bin/server.js"
@@ -12,18 +12,21 @@
   "author": "",
   "dependencies": {
     "@babel/register": "^7.17.7",
-    "@herajs/client": "^1.2.1",
-    "@herajs/common": "^1.2.1",
+    "@herajs/client": "^2.1.1",
+    "@herajs/common": "^2.1.1",
     "axios": "^1.6.5",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "elasticsearch": "^16.7.3",
     "express": "^4.16.3",
+    "http": "^0.0.1-security",
     "node-fetch": "^2.6.0",
     "node-schedule": "^2.1.0",
+    "nodemon": "^3.1.9",
     "request-ip": "^3.3.0",
     "route-cache": "^0.4.5",
-    "tiny-async-pool": "^1.0.1"
+    "tiny-async-pool": "^1.0.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.0",

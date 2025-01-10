@@ -44,27 +44,6 @@ export const initializeV3StreamingService = (server) => {
     })
   })
 
-  console.log('[WebSocket] WebSocket server initialized for v3/streamBlock.')
+  console.log('[WebSocket] WebSocket server initialized for v3/streamBlocks.')
   return wss
 }
-
-// const peerInfo = async (req, res, next) => {
-//     console.log("peerInfo url : " + req.url);
-
-//     let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK);
-//     try {
-//         try {
-//             let peers = await aergoClientType.getPeers();
-//             // console.log(JSON.stringify(peers));
-//             return res.json(peers);
-//         } catch (e) {
-//             console.log("connectState e = " + e);
-//         }
-//     } catch (e) {
-//         return res.json({ error: e });
-//     }
-// }
-
-// export {
-//     peerInfo
-//   }

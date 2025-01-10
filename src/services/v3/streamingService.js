@@ -30,7 +30,6 @@ export const initializeV3StreamingService = (server) => {
 
     ws.on('close', () => {
       console.log('[WebSocket] Block stream ended.')
-      blockHeaderStream.cancel()
       /**
        * 웹소켓 연결 끊길 때 재연결
        * https://jungeunpyun.tistory.com/78

@@ -8,7 +8,15 @@ export const initializeV3StreamingService = (server) => {
     const blockHeaderStream = aergo.getBlockMetadataStream()
 
     blockHeaderStream.on('data', (blockHeader) => {
-      ws.send(JSON.stringify(blockHeader)) // 블록 데이터를 클라이언트로 전송
+      try {
+        const blockHeaderWithVoteReward = {
+          ...blockHeader,
+          voteReward: blockHeader.voteReward.formatNumber('aergo'),
+        }
+        ws.send(JSON.stringify(blockHeaderWithVoteReward)) // 블록 데이터를 클라이언트로 전송
+      } catch (error) {
+        console.error('[WebSocket] Error sending blockHeader:', error)
+      }
     })
 
     blockHeaderStream.on('end', () => {
@@ -22,6 +30,7 @@ export const initializeV3StreamingService = (server) => {
 
     ws.on('close', () => {
       console.log('[WebSocket] Block stream ended.')
+      blockHeaderStream.cancel()
       /**
        * 웹소켓 연결 끊길 때 재연결
        * https://jungeunpyun.tistory.com/78
@@ -33,9 +42,6 @@ export const initializeV3StreamingService = (server) => {
 
     ws.on('error', (err) => {
       console.error('WebSocket error:', err)
-      setTimeout(function () {
-        initializeV3StreamingService(server)
-      }, 1000)
     })
   })
 

@@ -10,8 +10,7 @@ const httpServer = createServer(app)
 const wssV3 = initializeV3StreamingService(httpServer)
 
 httpServer.on('upgrade', (req, socket, head) => {
-  console.log('Upgrade request received for URL:', req.url)
-  if (req.url === '/v3/streamBlock') {
+  if (req.url === '/v3/streamBlocks') {
     wssV3.handleUpgrade(req, socket, head, (ws) => {
       wssV3.emit('connection', ws, req)
     })

@@ -226,70 +226,105 @@ const CachedRecentTransactions = async (req, res, next) => {
  * Bypasses the database and directly retrieves data from the gRPC client.
  */
 
-const getPeerInfo = async (req, res, next) => {
+const peerInfo = async (req, res, next) => {
   console.log('peerInfo url : ' + req.url)
 
   let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
   try {
-    try {
-      let peers = await aergoClientType.getPeers()
-      // console.log(JSON.stringify(peers));
-      return res.json(peers)
-    } catch (e) {
-      console.log('connectState e = ' + e)
-    }
+    let peers = await aergoClientType.getPeers()
+    // console.log(JSON.stringify(peers));
+    return res.json(peers)
   } catch (e) {
-    return res.json({ error: e })
+    return res.status(500).json({ error: e.message })
   }
 }
 
-const getChainInfo = async (req, res, next) => {
+const chainInfo = async (req, res, next) => {
   console.log('chainInfo url : ' + req.url)
 
   let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
   try {
-    try {
-      let chainInfo = await aergoClientType.getChainInfo()
-      return res.json(chainInfo)
-    } catch (e) {
-      console.log('connectState e = ' + e)
-    }
+    let chainInfo = await aergoClientType.getChainInfo()
+    return res.json(chainInfo)
   } catch (e) {
     return res.json({ error: e })
   }
 }
 
-const getConsensusInfo = async (req, res, next) => {
+const consensusInfo = async (req, res, next) => {
   console.log('consensusInfo url : ' + req.url)
 
   let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
   try {
-    try {
-      let consensusInfo = await aergoClientType.getConsensusInfo()
-      return res.json(consensusInfo)
-    } catch (e) {
-      console.log('connectState e = ' + e)
-    }
+    let consensusInfo = await aergoClientType.getConsensusInfo()
+    return res.json(consensusInfo)
   } catch (e) {
-    return res.json({ error: e })
+    return res.status(500).json({ error: e.message })
   }
 }
 
-const getBestBlock = async (req, res, next) => {
+const bestBlock = async (req, res, next) => {
   console.log('bestBlock url : ' + req.url)
 
   let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
   try {
-    try {
-      let bestBlock = await aergoClientType.blockchain()
-      return res.json(bestBlock)
-    } catch (e) {
-      console.log('connectState e = ' + e)
-    }
+    let bestBlock = await aergoClientType.blockchain()
+    return res.json(bestBlock)
   } catch (e) {
-    return res.json({ error: e })
+    return res.status(500).json({ error: e.message })
   }
 }
+
+const accountState = async (req, res, next) => {
+  console.log('accountState url : ' + req.url)
+  const address = req.query.address
+  if (!address) {
+    return res.status(400).json({ error: 'Address parameter is required' })
+  }
+  let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
+
+  try {
+    let accountState = await aergoClientType.getState(address)
+    return res.json(accountState)
+  } catch (e) {
+    return res.status(500).json({ error: e.message })
+  }
+}
+
+const staking = async (req, res, next) => {
+  console.log('staking url : ' + req.url)
+  const address = req.query.address
+  if (!address) {
+    return res.status(400).json({ error: 'Address parameter is required' })
+  }
+  let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
+
+  try {
+    let staking = await aergoClientType.getStaking(address)
+    return res.json(staking)
+  } catch (e) {
+    return res.status(500).json({ error: e.message })
+  }
+}
+
+const block = async (req, res, next) => {
+  console.log('block url : ' + req.url)
+  const blockNoOrHash = req.query.blockNoOrHash
+  if (!blockNoOrHash) {
+    return res
+      .status(400)
+      .json({ error: 'blockNoOrHash parameter is required' })
+  }
+  let aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
+
+  try {
+    let block = await aergoClientType.getBlock(blockNoOrHash)
+    return res.json(block)
+  } catch (e) {
+    return res.status(500).json({ error: e.message })
+  }
+}
+
 export {
   txHistory,
   CachedTxHistory,
@@ -297,8 +332,11 @@ export {
   CachedMainBlockInfo,
   RecentTransactions,
   CachedRecentTransactions,
-  getPeerInfo,
-  getChainInfo,
-  getConsensusInfo,
-  getBestBlock,
+  peerInfo,
+  chainInfo,
+  consensusInfo,
+  bestBlock,
+  accountState,
+  staking,
+  block,
 }

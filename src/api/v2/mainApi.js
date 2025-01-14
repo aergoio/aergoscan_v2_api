@@ -49,11 +49,11 @@ apiV2.route('/CachedRecentTransactions').get(CachedRecentTransactions)
 
 // get blockchain datas by hera.js
 apiV2.route('/peers').get(peers)
-apiV2.route('/chainInfo').get(chainInfo)
+apiV2.route('/node/chainInfo').get(chainInfo)
+apiV2.route('/node/bestBlock').get(bestBlock)
 apiV2.route('/nameInfo').get(nameInfo)
 apiV2.route('/serverInfo').get(serverInfo)
 apiV2.route('/consensusInfo').get(consensusInfo)
-apiV2.route('/bestBlock').get(bestBlock)
 apiV2.route('/accountState').get(accountState)
 apiV2.route('/staking').get(staking)
 apiV2.route('/block').get(block)

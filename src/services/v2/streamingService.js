@@ -1,7 +1,7 @@
 import { heraGrpcProvider } from '../herajs'
 import WebSocket from 'ws'
 
-export const initializeV3StreamingService = (server) => {
+export const initializeStreamingService = (server) => {
   const wss = new WebSocket.Server({ noServer: true })
   wss.on('connection', (ws) => {
     const aergo = heraGrpcProvider(process.env.SELECTED_NETWORK)
@@ -35,7 +35,7 @@ export const initializeV3StreamingService = (server) => {
        * https://jungeunpyun.tistory.com/78
        *  */
       setTimeout(function () {
-        initializeV3StreamingService(server)
+        initializeStreamingService(server)
       }, 1000)
     })
 
@@ -44,6 +44,6 @@ export const initializeV3StreamingService = (server) => {
     })
   })
 
-  console.log('[WebSocket] WebSocket server initialized for v3/streamBlocks.')
+  console.log('[WebSocket] WebSocket server initialized for v2/streamBlocks.')
   return wss
 }

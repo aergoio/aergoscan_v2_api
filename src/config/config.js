@@ -1,3 +1,7 @@
+// Load environment variables and provide defaults
+const dotenv = require('dotenv')
+dotenv.config()
+
 const ENV_SELECTED_NETWORK = process.env.SELECTED_NETWORK
 const ENV_ES_URL = process.env.ES_URL
 const ENV_HTTP_PORT = process.env.HTTP_PORT
@@ -27,7 +31,7 @@ module.exports = {
   NODE_GRPC_MAIN: 'mainnet-api.aergo.io:7845',
   NODE_GRPC_TEST: 'testnet-api.aergo.io:7845',
   NODE_GRPC_ALPHA: 'alpha-api.aergo.io:7845',
-  NODE_GRPC_LOCAL: 'localhost:7845',
+  NODE_GRPC_LOCAL: `${ENV_HOST_API}:7845`,
 
   //-- Scheduler Config
   SCHEDULER_NETWORK: ENV_SELECTED_NETWORK,

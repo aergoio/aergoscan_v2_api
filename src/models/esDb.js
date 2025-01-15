@@ -1,11 +1,11 @@
-import elasticsearch from "elasticsearch";
+import elasticsearch from 'elasticsearch';
 
-import cfg from "../config/config";
-import * as Console from "console";
+import cfg from '../config/config';
+import * as Console from 'console';
 
 export const esDb = new elasticsearch.Client({
     host: cfg.DB_HOST,
-    log: ["error"], // 'trace'
+    log: ['error'], // 'trace'
 });
 
 /*
@@ -36,7 +36,7 @@ export const waitForDb = () => {
 */
 
 export class ApiClient {
-    constructor(chainId = "alpha") {
+    constructor(chainId = 'alpha') {
         this.chainId = chainId;
         this.CHAIN_INFO = `${chainId}_chain_info`;
         this.BLOCK_INDEX = `${chainId}_block`;
@@ -49,6 +49,8 @@ export class ApiClient {
         this.ACCOUNT_TOKENS_INDEX = `${chainId}_account_tokens`;
         this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
         this.NFT_INDEX = `${chainId}_nft`;
+        this.TX_INTERNAL_INDEX = `${chainId}_tx_internal`;
+        this.INTERNAL_TX_INDEX = `${chainId}_internal_tx`;
     }
 
     async chainInfo(query) {
@@ -60,7 +62,7 @@ export class ApiClient {
             },
         };
         const response = await esDb.search(q);
-        const result = response.hits.hits.map((item) => ({
+        const result = response.hits.hits.map(item => ({
             hash: item._id,
             meta: item._source,
         }));
@@ -76,19 +78,19 @@ export class ApiClient {
         });
         if (single) {
             if (response.hits.total.value == 0) {
-                throw Error("Not found");
+                throw Error('Not found');
             }
             const item = response.hits.hits[0];
             return { hash: item._id, meta: item._source };
         } else {
-            return response.hits.hits.map((item) => ({
+            return response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             }));
         }
     }
 
-    async quickSearchBlocks(q, sort = "no", from = 0, size = 10) {
+    async quickSearchBlocks(q, sort = 'no', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.BLOCK_INDEX,
@@ -110,7 +112,7 @@ export class ApiClient {
             limitPageCount: limitPageCount,
             from,
             size,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
@@ -121,7 +123,7 @@ export class ApiClient {
 
     async searchTransactions(query, extraBody) {
         const response = await this.searchTransactionsRaw(query, extraBody);
-        return response.hits.hits.map((item) => ({
+        return response.hits.hits.map(item => ({
             hash: item._id,
             meta: item._source,
         }));
@@ -135,8 +137,8 @@ export class ApiClient {
                 query,
                 size: 10,
                 sort: {
-                    blockno: { order: "desc" },
-                    tx_idx: { order: "asc" },
+                    blockno: { order: 'desc' },
+                    tx_idx: { order: 'asc' },
                 },
             },
         };
@@ -150,7 +152,7 @@ export class ApiClient {
         return response;
     }
 
-    async quickSearchTransactions(q, sort = "blockno", from = 0, size = 10) {
+    async quickSearchTransactions(q, sort = 'blockno', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.TX_INDEX,
@@ -172,10 +174,59 @@ export class ApiClient {
             limitPageCount: limitPageCount,
             from,
             size,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
+        };
+        return resp;
+    }
+
+    async quickSearchInternal(q, sort = 'blockno', from = 0, size = 10) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.TX_INTERNAL_INDEX,
+            q,
+            sort,
+            from,
+            size,
+        };
+        const response = await esDb.search(query);
+
+        // total-count and limit page count
+        const totalCnt = await this.getTxInternalCount(q);
+        let limitPageCount = totalCnt;
+        if (totalCnt > 10000) limitPageCount = 1000 * size;
+        const resp = {
+            total: totalCnt,
+            limitPageCount: limitPageCount,
+            from,
+            size,
+            hits: response.hits.hits.map(item => ({ hash: item._id, meta: item._source })),
+        };
+        return resp;
+    }
+
+    async quickSearchInternalTransactions(q, sort = 'blockno', from = 0, size = 10) {
+        const query = {
+            requestTimeout: 5000,
+            index: this.INTERNAL_TX_INDEX,
+            q,
+            sort,
+            from,
+            size,
+        };
+        const response = await esDb.search(query);
+
+        const totalCnt = await this.getInternalTxCount(q);
+        let limitPageCount = totalCnt;
+        if (totalCnt > 10000) limitPageCount = 1000 * size;
+        const resp = {
+            total: totalCnt,
+            limitPageCount: limitPageCount,
+            from,
+            size,
+            hits: response.hits.hits.map(item => ({ hash: item._id, meta: item._source })),
         };
         return resp;
     }
@@ -193,9 +244,9 @@ export class ApiClient {
                     },
                 },
                 sort: {
-                    blockno: { order: "desc" },
-                    tx_idx: { order: "asc" },
-                    event_idx: { order: "asc" },
+                    blockno: { order: 'desc' },
+                    tx_idx: { order: 'asc' },
+                    event_idx: { order: 'asc' },
                 },
             },
         };
@@ -205,12 +256,12 @@ export class ApiClient {
             total: response.hits.total.value,
             from,
             size,
-            hits: response.hits.hits.map((item) => item._source),
+            hits: response.hits.hits.map(item => item._source),
         };
         return resp;
     }
 
-    async quickSearchNames(q, sort = "blockno:desc", from = 0, size = 1) {
+    async quickSearchNames(q, sort = 'blockno:desc', from = 0, size = 1) {
         const query = {
             requestTimeout: 5000,
             index: this.NAME_INDEX,
@@ -224,12 +275,12 @@ export class ApiClient {
             total: response.hits.total.value,
             from,
             size,
-            hits: response.hits.hits.map((item) => item._source),
+            hits: response.hits.hits.map(item => item._source),
         };
         return resp;
     }
 
-    async quickSearchToken(q, sort = "blockno:desc", from = 0, size = 10) {
+    async quickSearchToken(q, sort = 'blockno:desc', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.TOKEN_INDEX,
@@ -251,7 +302,7 @@ export class ApiClient {
             limitPageCount: response.hits.total.value,
             from,
             size,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
@@ -259,12 +310,7 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchTokenTransfers(
-        q,
-        sort = "blockno:desc",
-        from = 0,
-        size = 10
-    ) {
+    async quickSearchTokenTransfers(q, sort = 'blockno:desc', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.TOKEN_TRANSFER_INDEX,
@@ -284,7 +330,7 @@ export class ApiClient {
             limitPageCount: limitPageCount,
             from,
             size,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
@@ -292,7 +338,7 @@ export class ApiClient {
         return resp;
     }
 
-    async accountsBalance(q, sort = "balance_float", from = 0, size = 20) {
+    async accountsBalance(q, sort = 'balance_float', from = 0, size = 20) {
         const query = {
             requestTimeout: 5000,
             index: this.ACCOUNT_BALANCE_INDEX,
@@ -314,7 +360,7 @@ export class ApiClient {
             limitPageCount: limitPageCount,
             from,
             size,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
@@ -322,7 +368,7 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchAccountToken(q, sort = "", from = 0, size = 10) {
+    async quickSearchAccountToken(q, sort = '', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.ACCOUNT_TOKENS_INDEX,
@@ -344,7 +390,7 @@ export class ApiClient {
             limitPageCount: limitPageCount,
             from,
             size,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
@@ -369,7 +415,7 @@ export class ApiClient {
 
         const resp = {
             total: response.hits.total.value,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
@@ -392,7 +438,7 @@ export class ApiClient {
                 query,
                 size: 50,
                 sort: {
-                    blockno: { order: "desc" },
+                    blockno: { order: 'desc' },
                 },
             },
         };
@@ -412,11 +458,11 @@ export class ApiClient {
                 body: {
                     size: 1,
                     sort: {
-                        no: { order: "desc" },
+                        no: { order: 'desc' },
                     },
                 },
             },
-            true
+            true,
         );
     }
 
@@ -426,11 +472,11 @@ export class ApiClient {
                 body: {
                     size: 1,
                     sort: {
-                        no: { order: "asc" },
+                        no: { order: 'asc' },
                     },
                 },
             },
-            true
+            true,
         );
     }
 
@@ -448,6 +494,28 @@ export class ApiClient {
     async getTxCount(q) {
         const args = {
             index: this.TX_INDEX,
+        };
+        if (q) {
+            args.q = q;
+        }
+        const { count } = await esDb.count(args);
+        return count;
+    }
+
+    async getTxInternalCount(q) {
+        const args = {
+            index: this.TX_INTERNAL_INDEX,
+        };
+        if (q) {
+            args.q = q;
+        }
+        const { count } = await esDb.count(args);
+        return count;
+    }
+
+    async getInternalTxCount(q) {
+        const args = {
+            index: this.INTERNAL_TX_INDEX,
         };
         if (q) {
             args.q = q;
@@ -504,10 +572,10 @@ export class ApiClient {
         tsQuery,
         interval,
         aggs = {
-            sum_txs: { sum: { field: "txs" } },
-            max_txs: { max: { field: "txs" } },
+            sum_txs: { sum: { field: 'txs' } },
+            max_txs: { max: { field: 'txs' } },
         },
-        extraQuery = []
+        extraQuery = [],
     ) {
         const query = {
             bool: {
@@ -523,7 +591,7 @@ export class ApiClient {
         };
         // console.log("query = "+JSON.stringify(query));
         // console.log("aggs = "+JSON.stringify(aggs));
-        return new Promise(async (resolve) => {
+        return new Promise(async resolve => {
             const response = await esDb.search({
                 index: this.BLOCK_INDEX,
                 body: {
@@ -531,7 +599,7 @@ export class ApiClient {
                     aggs: {
                         grouped_blocks: {
                             date_histogram: {
-                                field: "ts",
+                                field: 'ts',
                                 interval: interval,
                             },
                             aggs,
@@ -558,7 +626,7 @@ export class ApiClient {
                 aggs: {
                     group_by_state: {
                         terms: {
-                            field: "account",
+                            field: 'account',
                             size: 50000,
                         },
                     },
@@ -567,7 +635,7 @@ export class ApiClient {
         };
         const response = await esDb.search(query);
         const resp = {
-            hits: response.aggregations.group_by_state.buckets.map((item) => ({
+            hits: response.aggregations.group_by_state.buckets.map(item => ({
                 account: item.key,
                 amount: item.doc_count,
             })),
@@ -576,12 +644,7 @@ export class ApiClient {
     }
 
     // NFT Holder Inventory
-    async searchAccountTokenInventory(
-        q,
-        sort = "blockno:desc",
-        from = 0,
-        size = 10
-    ) {
+    async searchAccountTokenInventory(q, sort = 'blockno:desc', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
             index: this.NFT_INDEX,
@@ -605,7 +668,7 @@ export class ApiClient {
             limitPageCount: limitPageCount,
             from,
             size,
-            hits: response.hits.hits.map((item) => ({
+            hits: response.hits.hits.map(item => ({
                 hash: item._id,
                 meta: item._source,
             })),
@@ -628,7 +691,7 @@ export class ApiClient {
                 aggs: {
                     group_by_state: {
                         terms: {
-                            field: "address",
+                            field: 'address',
                         },
                     },
                 },
@@ -636,7 +699,7 @@ export class ApiClient {
         };
         const response = await esDb.search(query);
         const resp = {
-            hits: response.aggregations.group_by_state.buckets.map((item) => ({
+            hits: response.aggregations.group_by_state.buckets.map(item => ({
                 address: item.key,
                 amount: item.doc_count,
             })),
@@ -659,7 +722,7 @@ export class ApiClient {
                 aggs: {
                     group_by_state: {
                         terms: {
-                            field: "address",
+                            field: 'address',
                         },
                     },
                 },
@@ -668,7 +731,7 @@ export class ApiClient {
         const response = await esDb.search(query);
         const resp = {
             // hits: response.aggregations.group_by_state.buckets.map(item => ({account:item.key, amount:item.doc_count}))
-            hits: response.aggregations.group_by_state.buckets.map((item) => ({
+            hits: response.aggregations.group_by_state.buckets.map(item => ({
                 address: item.key,
             })),
         };
@@ -689,10 +752,10 @@ export class ApiClient {
         tsQuery,
         interval,
         aggs = {
-            sum_amount: { sum: { field: "amount_float" } },
-            count_amount: { value_count: { field: "amount_float" } },
+            sum_amount: { sum: { field: 'amount_float' } },
+            count_amount: { value_count: { field: 'amount_float' } },
         },
-        extraQuery = []
+        extraQuery = [],
     ) {
         // console.log(".......req_address = "+req_address)
         // console.log(".......extraQuery = "+extraQuery)
@@ -713,7 +776,7 @@ export class ApiClient {
                 ],
             },
         };
-        return new Promise(async (resolve) => {
+        return new Promise(async resolve => {
             const response = await esDb.search({
                 index: this.TOKEN_TRANSFER_INDEX,
                 body: {
@@ -726,7 +789,7 @@ export class ApiClient {
                     aggs: {
                         grouped_tx: {
                             date_histogram: {
-                                field: "ts",
+                                field: 'ts',
                                 interval: interval,
                             },
                             aggs,

@@ -70,13 +70,13 @@ const transactions = async (req, res, next) => {
 /**
  * internals 정보 (q, sort, size, from)
  */
-const internals = async (req, res, next) => {
-    console.log('(' + requestIp.getClientIp(req) + ') internals url : ' + req.url);
+const internalOperations = async (req, res, next) => {
+    console.log('(' + requestIp.getClientIp(req) + ') internalOperations url : ' + req.url);
     var from = parseInt(req.query.from || 0);
     var size = Math.min(1000, parseInt(req.query.size || 10));
 
     try {
-        const result = await req.apiClient.quickSearchInternal(req.query.q, req.query.sort, from, size);
+        const result = await req.apiClient.quickSearchInternalOperations(req.query.q, req.query.sort, from, size);
 
         return res.json(result);
     } catch (e) {
@@ -92,13 +92,13 @@ const internals = async (req, res, next) => {
     }
 };
 
-const internaltransactions = async (req, res, next) => {
-    console.log('(' + requestIp.getClientIp(req) + ') internaltransactions url : ' + req.url);
+const contractCall = async (req, res, next) => {
+    console.log('(' + requestIp.getClientIp(req) + ') contractCall url : ' + req.url);
     var from = parseInt(req.query.from || 0);
     var size = Math.min(1000, parseInt(req.query.size || 10));
 
     try {
-        const result = await req.apiClient.quickSearchInternalTransactions(req.query.q, req.query.sort, from, size);
+        const result = await req.apiClient.quickSearchContractCall(req.query.q, req.query.sort, from, size);
 
         return res.json(result);
     } catch (e) {
@@ -156,4 +156,4 @@ const event = async (req, res, next) => {
     }
 };
 
-export { blocks, transactions, internals, internaltransactions, contractTx, event };
+export { blocks, transactions, internalOperations, contractCall, contractTx, event };

@@ -49,8 +49,8 @@ export class ApiClient {
         this.ACCOUNT_TOKENS_INDEX = `${chainId}_account_tokens`;
         this.ACCOUNT_BALANCE_INDEX = `${chainId}_account_balance`;
         this.NFT_INDEX = `${chainId}_nft`;
-        this.TX_INTERNAL_INDEX = `${chainId}_tx_internal`;
-        this.INTERNAL_TX_INDEX = `${chainId}_internal_tx`;
+        this.INTERNAL_OPERATIONS_INDEX = `${chainId}_internal_operations`;
+        this.CONTRACT_CALL_INDEX = `${chainId}_contract_call`;
     }
 
     async chainInfo(query) {
@@ -182,10 +182,10 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchInternal(q, sort = 'blockno', from = 0, size = 10) {
+    async quickSearchInternalOperations(q, sort = '_index', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
-            index: this.TX_INTERNAL_INDEX,
+            index: this.INTERNAL_OPERATIONS_INDEX,
             q,
             sort,
             from,
@@ -194,7 +194,7 @@ export class ApiClient {
         const response = await esDb.search(query);
 
         // total-count and limit page count
-        const totalCnt = await this.getTxInternalCount(q);
+        const totalCnt = await this.getInternalOperationsCount(q);
         let limitPageCount = totalCnt;
         if (totalCnt > 10000) limitPageCount = 1000 * size;
         const resp = {
@@ -207,10 +207,10 @@ export class ApiClient {
         return resp;
     }
 
-    async quickSearchInternalTransactions(q, sort = 'blockno', from = 0, size = 10) {
+    async quickSearchContractCall(q, sort = 'blockno', from = 0, size = 10) {
         const query = {
             requestTimeout: 5000,
-            index: this.INTERNAL_TX_INDEX,
+            index: this.CONTRACT_CALL_INDEX,
             q,
             sort,
             from,
@@ -218,7 +218,7 @@ export class ApiClient {
         };
         const response = await esDb.search(query);
 
-        const totalCnt = await this.getInternalTxCount(q);
+        const totalCnt = await this.getContractCallCount(q);
         let limitPageCount = totalCnt;
         if (totalCnt > 10000) limitPageCount = 1000 * size;
         const resp = {
@@ -502,9 +502,9 @@ export class ApiClient {
         return count;
     }
 
-    async getTxInternalCount(q) {
+    async getInternalOperationsCount(q) {
         const args = {
-            index: this.TX_INTERNAL_INDEX,
+            index: this.INTERNAL_OPERATIONS_INDEX,
         };
         if (q) {
             args.q = q;
@@ -513,9 +513,9 @@ export class ApiClient {
         return count;
     }
 
-    async getInternalTxCount(q) {
+    async getContractCallCount(q) {
         const args = {
-            index: this.INTERNAL_TX_INDEX,
+            index: this.CONTRACT_CALL_INDEX,
         };
         if (q) {
             args.q = q;

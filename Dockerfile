@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:18-alpine
 
 ARG ARG_SELECTED_NETWORK
 ARG ARG_ES_URL
@@ -14,7 +14,9 @@ WORKDIR /aergoscan-api
 RUN apk add python3>3.10.13 g++ make
 
 COPY package* ./
+RUN rm -rf node_modules package-lock.json
 RUN npm install
+RUN npm dedupe
 
 COPY .babelrc .env chaininfo.json ./
 COPY bin/ bin/

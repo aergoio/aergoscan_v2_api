@@ -26,7 +26,8 @@
     "request-ip": "^3.3.0",
     "route-cache": "^0.4.5",
     "tiny-async-pool": "^1.0.1",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "cross-spawn": "^7.0.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.0",
@@ -38,7 +39,6 @@
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0",
     "yamljs": "^0.3.0",
-    "braces": "^3.0.3",
-    "cross-spawn": "^7.0.5"
+    "braces": "^3.0.3"
   }
 }

@@ -17,7 +17,6 @@ COPY package* ./
 RUN npm install -g npm@10.9.0
 RUN npm cache clean --force
 RUN rm -rf node_modules package-lock.json
-RUN npm dedupe
 RUN npm install
 
 COPY .babelrc .env chaininfo.json ./

@@ -15,9 +15,8 @@ RUN apk add python3>3.10.13 g++ make
 
 COPY package* ./
 RUN npm install -g npm@10.9.0
-RUN npm uninstall -g cross-spawn
 RUN npm cache clean --force
-RUN npm install -g cross-spawn@7.0.5 --force
+RUN rm -rf node_modules package-lock.json
 RUN npm install
 
 COPY .babelrc .env chaininfo.json ./

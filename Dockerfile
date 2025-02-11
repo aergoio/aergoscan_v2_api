@@ -14,6 +14,8 @@ WORKDIR /aergoscan-api
 RUN apk add python3>3.10.13 g++ make
 
 COPY package* ./
+RUN npm install -g npm@10.9.0
+RUN npm uninstall -g cross-spawn && npm cache clean --force && find /usr/local/lib/node_modules -name "cross-spawn" -type d -exec rm -rf {} + && npm install -g cross-spawn@7.0.5 --force && npm config set save-exact=true && npm config set legacy-peer-deps=true
 RUN npm install
 
 COPY .babelrc .env chaininfo.json ./

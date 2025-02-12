@@ -1,5 +1,6 @@
-FROM node:20-alpine3.19
-
+FROM node:20-alpine
+RUN apk update && apk upgrade --no-cache \
+    && apk add libcrypto3 libssl3
 ARG ARG_SELECTED_NETWORK
 ARG ARG_ES_URL
 ARG ARG_HTTP_PORT

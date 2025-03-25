@@ -1,6 +1,7 @@
 import { schedulerDataCache } from '../../caches/caches'
 import { heraGrpcProvider } from '../herajs'
 import { Contract } from '@herajs/client'
+import { Amount } from '@herajs/common'
 
 /**
  * txHistory
@@ -392,6 +393,14 @@ const accountVotes = async (req, res) => {
 
   try {
     let accountVotes = await aergoClientType.getAccountVotes(address)
+    accountVotes = {
+      ...accountVotes,
+      totalVotingPower: accountVotes
+        .getVotingList()
+        .map((vote) => new Amount(vote.getAmount(), 'aer'))
+        .reduce((a, b) => a.add(b), new Amount(0))
+        .formatNumber('aergo'),
+    }
 
     return res.json(accountVotes)
   } catch (e) {

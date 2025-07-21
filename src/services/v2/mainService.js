@@ -463,7 +463,7 @@ const queryContract = async (req, res) => {
   try {
     const { address, name, args } = req.body
     const aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
-    const abi = await aergoClientType.getABI(contractAddress)
+    const abi = await aergoClientType.getABI(address)
 
     if (!address || !name) {
       return res.status(400).json({

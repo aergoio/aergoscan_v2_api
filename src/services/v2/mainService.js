@@ -498,10 +498,11 @@ const queryContractState = async (req, res) => {
     }
 
     const contract = Contract.fromAbi(abi).setAddress(address)
+    console.log('contract:', contract)
     const result = await aergoClientType.queryContractState(
       contract.queryState(...stateNames)
     )
-
+    console.log('result:', result)
     return res.status(200).json(result)
   } catch (error) {
     console.error('[Error querying contract]:', error)

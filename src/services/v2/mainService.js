@@ -488,7 +488,7 @@ const queryContractState = async (req, res) => {
   try {
     const { address, stateNames } = req.body
 
-    if (!address || !Array.isArray(stateNames)) {
+    if (!address || !stateNames) {
       return res.status(400).json({
         error: "Missing or invalid parameters: 'address' or 'stateNames'",
       })
@@ -496,10 +496,7 @@ const queryContractState = async (req, res) => {
 
     const aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
 
-    const result = await aergoClientType.queryContractState(
-      address,
-      ...stateNames
-    )
+    const result = await aergoClientType.queryContractState(address, stateNames)
 
     return res.status(200).json(result)
   } catch (error) {

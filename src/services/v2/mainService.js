@@ -494,9 +494,14 @@ const queryContractState = async (req, res) => {
       })
     }
 
-    const aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
+    const aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)\
+    
+    const variables =
+      Array.isArray(stateNames) && stateNames.length === 1
+        ? stateNames[0]
+        : stateNames
 
-    const result = await aergoClientType.queryContractState(address, stateNames)
+    const result = await aergoClientType.queryContractState(address, variables)
 
     return res.status(200).json(result)
   } catch (error) {

@@ -461,10 +461,11 @@ const transactionReceipt = async (req, res) => {
 
 const queryContract = async (req, res) => {
   try {
-    const { abi, address, name, args } = req.body
+    const { address, name, args } = req.body
     const aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
+    const abi = await aergoClientType.getABI(address)
 
-    if (!abi || !address || !name) {
+    if (!address || !name) {
       return res.status(400).json({
         error: "Missing required parameters: 'abi', 'address', or 'name'",
       })
@@ -485,18 +486,22 @@ const queryContract = async (req, res) => {
 
 const queryContractState = async (req, res) => {
   try {
-    const { abi, address, stateNames } = req.body
-    const aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
+    const { address, stateNames } = req.body
 
-    if (!abi || !address || !stateNames) {
+    if (!address || !stateNames) {
       return res.status(400).json({
-        error: "Missing required parameters: 'abi', 'address', or 'stateNames'",
+        error: "Missing or invalid parameters: 'address' or 'stateNames'",
       })
     }
-    const contract = Contract.fromAbi(abi).setAddress(address)
-    const result = await aergoClientType.queryContractState(
-      contract.queryState(...stateNames)
-    )
+
+    const aergoClientType = heraGrpcProvider(process.env.SELECTED_NETWORK)
+
+    const variables =
+      Array.isArray(stateNames) && stateNames.length === 1
+        ? stateNames[0]
+        : stateNames
+
+    const result = await aergoClientType.queryContractState(address, variables)
 
     return res.status(200).json(result)
   } catch (error) {

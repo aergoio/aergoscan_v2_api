@@ -32,7 +32,7 @@ module.exports = {
   //-- node grpc
   NODE_GRPC_MAIN: 'mainnet-api.aergo.io:7845',
   NODE_GRPC_TEST: 'testnet-api.aergo.io:7845',
-  NODE_GRPC_ALPHA: 'alpha-api.aergo.io:7845',
+  NODE_GRPC_ALPHA: '192.168.1.234:7845',
   NODE_GRPC_LOCAL: `${ENV_AERGO_NODE}`,
 
   //-- Scheduler Config

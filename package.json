@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.0.0",
+  "version": "1.0.1-alphanet",
   "description": "Backend for aergoscan, mostly API for chain metadata in elasticsearch db",
   "main": "src/index.js",
   "scripts": {

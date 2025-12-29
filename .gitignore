@@ -3,3 +3,15 @@
 node_modules
 api-docs/node_modules/
 .env
+
+# configurations for yarn berry(2.x) or later
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# We do not use Zero-Installs
+.yarn/cache
+.pnp.*

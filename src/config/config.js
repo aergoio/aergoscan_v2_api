@@ -11,6 +11,10 @@ const ENV_ALERT_URL = process.env.ALERT_URL
 const ENV_ALERT_BLOCKNO = process.env.ALERT_BLOCKNO
 const ENV_ALERT_INTERVAL_MINUTE = process.env.ALERT_INTERVAL_MINUTE
 
+const ENV_NODE_GRPC_MAIN = process.env.NODE_GRPC_MAIN || 'mainnet-api.aergo.io:7845'
+const ENV_NODE_GRPC_TEST = process.env.NODE_GRPC_TEST || 'testnet-api.aergo.io:7845'
+const ENV_NODE_GRPC_ALPHA = process.env.NODE_GRPC_ALPHA || 'alpha-api.aergo.io:7845'
+
 console.log('>>> process.env.SELECTED_NETWORK = ' + ENV_SELECTED_NETWORK)
 console.log('>>> process.env.ES_URL           = ' + ENV_ES_URL)
 console.log('>>> process.env.ENV_HTTP_PORT    = ' + ENV_HTTP_PORT)
@@ -19,6 +23,9 @@ console.log('>>> process.env.ENV_AERGO_NODE    = ' + ENV_AERGO_NODE)
 console.log('>>> process.env.ALERT_URL        = ' + ENV_ALERT_URL)
 console.log('>>> process.env.ALERT_BLOCKNO    = ' + ENV_ALERT_BLOCKNO)
 console.log('>>> process.env.ALERT_INTERVAL   = ' + ENV_ALERT_INTERVAL_MINUTE)
+console.log('>>> process.env.NODE_GRPC_MAIN   = ' + ENV_NODE_GRPC_MAIN)
+console.log('>>> process.env.NODE_GRPC_TEST   = ' + ENV_NODE_GRPC_TEST)
+console.log('>>> process.env.NODE_GRPC_ALPHA  = ' + ENV_NODE_GRPC_ALPHA)
 
 module.exports = {
   // api version
@@ -30,9 +37,9 @@ module.exports = {
   HOST: ENV_HOST_API,
 
   //-- node grpc
-  NODE_GRPC_MAIN: 'mainnet-api.aergo.io:7845',
-  NODE_GRPC_TEST: 'testnet-api.aergo.io:7845',
-  NODE_GRPC_ALPHA: 'alpha-api.aergo.io:7845',
+  NODE_GRPC_MAIN: ENV_NODE_GRPC_MAIN,
+  NODE_GRPC_TEST: ENV_NODE_GRPC_TEST,
+  NODE_GRPC_ALPHA: ENV_NODE_GRPC_ALPHA,
   NODE_GRPC_LOCAL: `${ENV_AERGO_NODE}`,
 
   //-- Scheduler Config
